@@ -6,7 +6,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.*;
 import commygdx.game.AI.graph.PathGraph;
 import commygdx.game.AI.graph.PathNode;
-
 import commygdx.game.AuberGame;
 import commygdx.game.ShipSystem;
 import commygdx.game.TileWorld;
@@ -25,24 +23,21 @@ import commygdx.game.actors.DemoAuber;
 import commygdx.game.actors.Infiltrator;
 import commygdx.game.stages.Hud;
 import commygdx.game.actors.Auber;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
 public class PlayScreen implements Screen {
     protected AuberGame auberGame;
-    private Hud hud;
-    private OrthographicCamera gamecam;
-    private Viewport gamePort;
-    private TmxMapLoader mapLoader;
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
+    private final Hud hud;
+    private final OrthographicCamera gamecam;
+    private final Viewport gamePort;
+    private final TiledMap map;
+    private final OrthogonalTiledMapRenderer renderer;
     public ArrayList<Infiltrator> enemies;
     //Graph used for AI pathfinding
     public PathGraph graph;
-    private boolean demo;
-
+    private final boolean demo;
 
     //Scene2D
     protected Auber player;
@@ -50,15 +45,13 @@ public class PlayScreen implements Screen {
 
     //Used for the infiltrator's hallucinate power
     private boolean hallucinate;
-    private Texture hallucinateTexture;
+    private final Texture hallucinateTexture;
 
-
-    private TileWorld tiles;
-
+    private final TileWorld tiles;
     protected int scale;
 
 
-    public PlayScreen(AuberGame auberGame,boolean demo) {
+    public PlayScreen(AuberGame auberGame, boolean demo) {
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
@@ -68,7 +61,7 @@ public class PlayScreen implements Screen {
         Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());*/
 
         //load map
-        mapLoader = new TmxMapLoader();
+        TmxMapLoader mapLoader = new TmxMapLoader();
         map = mapLoader.load("mapV2.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, scale);
 
@@ -77,13 +70,11 @@ public class PlayScreen implements Screen {
         //sets up stage and actors
         setupShipStage();
 
-
         tiles = new TileWorld(this);
 
         //Used for the infiltrator's hallucinate power
         hallucinateTexture = new Texture("hallucinateV2.png");
         hallucinate = false;
-
 
         hud = new Hud(auberGame.batch, enemies, tiles.getSystems());
     }
@@ -108,22 +99,19 @@ public class PlayScreen implements Screen {
                 new Infiltrator(new Vector2(5400, 7800), auberGame.batch, 2, graph)
         ));
 
-
         shipStage.addActor(player);
         //Adding infiltrators to stage
         for (Infiltrator enemy : enemies) {
             shipStage.addActor(enemy);
         }
-
-
     }
 
     protected void createAuber() {
         //A different version of Auber is used for the player depending on if it's a demo or not
-        if (!demo){
+        if (!demo) {
             player = new Auber(new Vector2(450 * scale, 778 * scale), auberGame.batch);
-        }else {
-            player = new DemoAuber(new Vector2(450 * scale, 778 * scale),auberGame.batch,graph);
+        } else {
+            player = new DemoAuber(new Vector2(450 * scale, 778 * scale), auberGame.batch, graph);
         }
     }
 
@@ -139,6 +127,7 @@ public class PlayScreen implements Screen {
 
     /**
      * Draws the game to screen and updates game
+     *
      * @param delta Time difference from last call
      */
     @Override
@@ -157,12 +146,14 @@ public class PlayScreen implements Screen {
         renderer.render();
         shipStage.draw();
 
-        if (hallucinate) { drawHallucinate();}
+        if (hallucinate) {
+            drawHallucinate();
+        }
         hud.updateAttacks(tiles.getSystems());
         hud.stage.draw();
     }
 
-    private void updateCamera(){
+    private void updateCamera() {
         //sets camera to players position
         Vector3 pos = new Vector3((player.getX()) + player.getWidth() / 2, (player.getY()) + player.getHeight() / 2, 0);
         shipStage.getViewport().getCamera().position.set(pos);
@@ -170,20 +161,19 @@ public class PlayScreen implements Screen {
         gamecam.update();
         renderer.setView(gamecam);
         auberGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-
     }
 
-    private void teleportCheck(){
+    private void teleportCheck() {
         //teleport is disabled in demo mode, because the ai can't handle it
-        if(demo){
+        if (demo) {
             return;
         }
         //switch to teleport menu
-        if (player.teleportCheck(tiles) && auberGame.onTeleport == "false") {
+        if (player.teleportCheck(tiles) && auberGame.onTeleport.equals("false")) {
             auberGame.setScreen(new TeleportMenu(auberGame));
         }
         //teleport auber
-        if (auberGame.onTeleport != "true" && auberGame.onTeleport != "false") {
+        if (!auberGame.onTeleport.equals("true") && !auberGame.onTeleport.equals("false")) {
             teleportAuber();
             auberGame.onTeleport = "false";
         }
@@ -199,9 +189,7 @@ public class PlayScreen implements Screen {
         if (player.sprite.getBoundingRectangle().overlaps(tiles.getInfirmary())) {
             hud.showHallucinateLabel(false);
             hallucinate = false;
-
         }
-
     }
 
 
@@ -218,13 +206,14 @@ public class PlayScreen implements Screen {
         float y = tiles.getTeleporters().get(auberGame.onTeleport).y;
         player.setPosition(x, y);
         player.movementSystem.updatePos(new Vector2(x, y));
-        if(demo){
+        if (demo) {
             player.act(0);
         }
     }
 
     /**
      * Creates an ai pathing graph from .csv files
+     *
      * @param nodesFilepath The filepath for the .csv file containing the nodes of the graph
      * @param edgesFilepath The filepath for the .csv file containing the edges of the graph
      * @return The resultant pathing graph
@@ -252,7 +241,7 @@ public class PlayScreen implements Screen {
             line = reader.readLine();
 
             while ((line = reader.readLine()) != null) {
-                String data[] = line.split(",");
+                String[] data = line.split(",");
                 graph.addEdge(nodes.get(Integer.parseInt(data[0])), nodes.get(Integer.parseInt(data[1])));
             }
 
@@ -287,30 +276,26 @@ public class PlayScreen implements Screen {
             enemy.updateTimers(dt * 100);
 
             //the infiltrator will use their power if the auber is close enough and it's off cooldown
-            if (enemy.getPowerCooldown() > 500 && inRange(enemy) && enemy.getIsArrested() == false) {
-                enemy.usePower(this,tiles.getRoom(player.getX(), player.getY()));
+            if (enemy.getPowerCooldown() > 500 && inRange(enemy) && !enemy.getIsArrested()) {
+                enemy.usePower(this, tiles.getRoom(player.getX(), player.getY()));
             }
             //the infiltrator will stop their power when it's gone on past it's limit
             if (enemy.getPowerDuration() > 1000) {
                 enemy.stopPower(this);
             }
-
         }
         checkInfiltratorsSystems();
     }
 
     /**
      * Determines if the given enemy is within a certain range of the auber
+     *
      * @param enemy The enemy whose range is being checked
      * @return True if the enemy is in range, false otherwise
      */
     public boolean inRange(Infiltrator enemy) {
-        if (enemy.getX() < player.getX() + 1000 && enemy.getX() > player.getX() - 1000 &&
-                enemy.getY() < player.getY() + 1000 && enemy.getY() > player.getY() - 1000) {
-            return true;
-        }
-        return false;
-
+        return enemy.getX() < player.getX() + 1000 && enemy.getX() > player.getX() - 1000 &&
+                enemy.getY() < player.getY() + 1000 && enemy.getY() > player.getY() - 1000;
     }
 
     public void setHallucinate(boolean hallucinate) {

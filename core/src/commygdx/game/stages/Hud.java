@@ -12,68 +12,50 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import commygdx.game.AuberGame;
 import commygdx.game.ShipSystem;
 import commygdx.game.actors.Infiltrator;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hud {
     public Stage stage;
-    private Viewport viewport;
     private int systemsUp;
-    private Label systemLabel;
-    private  Label systemTextLabel;
-
+    private final Label systemLabel;
     private int infiltratorsRemaining;
-    private Label infiltratorLabel;
-    private Label infiltratorTextLabel;
+    private final Label infiltratorLabel;
+    private final Label attackLabel;
+    private final Label hallucinateLabel;
 
-    private Label attackLabel;
-    private Label attackTextLabel;
-
-    private Label hallucinateLabel;
-
-    private BitmapFont font;
-
-    private ArrayList<Infiltrator> enemies;
-    private ArrayList<ShipSystem> systems;
-
-//used for buttons,text, etc
-    public Hud(SpriteBatch sb,ArrayList<Infiltrator> enemies,ArrayList<ShipSystem> systems){
-        viewport=new FitViewport(AuberGame.V_WIDTH,AuberGame.V_HEIGHT,new OrthographicCamera());
-        stage= new Stage(viewport,sb);
-
-        this.enemies=enemies;
-        this.systems=systems;
+    //used for buttons,text, etc
+    public Hud(SpriteBatch sb, ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems) {
+        Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, sb);
 
         Table table = new Table();
         table.top();
         table.setFillParent(true);
 
-        systemsUp=systems.size();
-        infiltratorsRemaining=enemies.size();
+        systemsUp = systems.size();
+        infiltratorsRemaining = enemies.size();
 
-        System.out.format("%d / 15 systems",systemsUp);
-        font=new BitmapFont();
+        System.out.format("%d / 15 systems", systemsUp);
+        BitmapFont font = new BitmapFont();
         font.getData().setScale(3f);
 
         //operational systems
-        systemLabel = new Label(String.format("%d / 15",systemsUp), new Label.LabelStyle(font, Color.WHITE));
-        systemTextLabel=new Label("systems operational", new Label.LabelStyle(font, Color.WHITE));
+        systemLabel = new Label(String.format("%d / 15", systemsUp), new Label.LabelStyle(font, Color.WHITE));
+        Label systemTextLabel = new Label("systems operational", new Label.LabelStyle(font, Color.WHITE));
 
         //remaining infiltrators
-        infiltratorLabel = new Label(String.format("%d / 8 ",infiltratorsRemaining), new Label.LabelStyle(font, Color.WHITE));
-        infiltratorTextLabel=new Label("infiltrators remaining", new Label.LabelStyle(font, Color.WHITE));
+        infiltratorLabel = new Label(String.format("%d / 8 ", infiltratorsRemaining), new Label.LabelStyle(font, Color.WHITE));
+        Label infiltratorTextLabel = new Label("infiltrators remaining", new Label.LabelStyle(font, Color.WHITE));
 
         //systems under attack
-        attackLabel=new Label("None", new Label.LabelStyle(font, Color.WHITE));
-        attackTextLabel=new Label("Current attacks", new Label.LabelStyle(font, Color.WHITE));
+        attackLabel = new Label("None", new Label.LabelStyle(font, Color.WHITE));
+        Label attackTextLabel = new Label("Current attacks", new Label.LabelStyle(font, Color.WHITE));
 
         //hallucination warning
-        hallucinateLabel=new Label("", new Label.LabelStyle(font, Color.WHITE));
+        hallucinateLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
 
-
-        table.setPosition(viewport.getScreenWidth()/2+150, 0);
+        table.setPosition(viewport.getScreenWidth() / 2 + 150, 0);
 
         table.add(systemLabel).expandX().padTop(50);
         table.row();
@@ -89,56 +71,62 @@ public class Hud {
         table.row();
         table.add(hallucinateLabel).expandX().padTop(50);
 
-
         stage.addActor(table);
-
-
     }
 
     /**
      * Updates the HUD to decrease the amount of infiltrators
      */
-    public void infiltratorCaught(){
-        infiltratorsRemaining-=1;
-        infiltratorLabel.setText(String.format("%d / 8",infiltratorsRemaining));
-
+    public void infiltratorCaught() {
+        infiltratorsRemaining -= 1;
+        infiltratorLabel.setText(String.format("%d / 8", infiltratorsRemaining));
     }
 
     /**
      * Sets the HUD's hallucination warning off or on
+     *
      * @param show If the hallucination warning should be shown or not
      */
-    public void showHallucinateLabel(boolean show){
-        if (show){
+    public void showHallucinateLabel(boolean show) {
+        if (show) {
             hallucinateLabel.setText("You are hallucinating \n Go to infirmary to heal ");
-        }else{
+        } else {
             hallucinateLabel.setText("");
         }
     }
 
     /**
      * Updates the HUD's display on what rooms have systems under attack
+     *
      * @param systems List of all the systems on the map
      */
-    public void updateAttacks(List<ShipSystem> systems){
+    public void updateAttacks(List<ShipSystem> systems) {
         /*Update hud to reflect attacks*/
-        String room=new String();
-        systemsUp=0;
-        for (ShipSystem system:systems){
-            if (system.getState()==1){
-                if (!room.contains(system.getRoom())){
-                    room+=system.getRoom();
-                    room+="\n";
+        String room = "";
+        systemsUp = 0;
+        for (ShipSystem system : systems) {
+            if (system.getState() == 1) {
+                if (!room.contains(system.getRoom())) {
+                    room += system.getRoom();
+                    room += "\n";
                 }
             }
-            if (system.getState()!=2){systemsUp+=1;}
+            if (system.getState() != 2) {
+                systemsUp += 1;
+            }
         }
-        if( room.length()<1){
-            room="None";
+        if (room.length() < 1) {
+            room = "None";
         }
         attackLabel.setText(room);
-        systemLabel.setText(String.format("%d / 15",systemsUp));
+        systemLabel.setText(String.format("%d / 15", systemsUp));
     }
-    public int getInfiltratorsRemaining(){return infiltratorsRemaining;}
-    public int getSystemsUp(){return systemsUp;}
+
+    public int getInfiltratorsRemaining() {
+        return infiltratorsRemaining;
+    }
+
+    public int getSystemsUp() {
+        return systemsUp;
+    }
 }
