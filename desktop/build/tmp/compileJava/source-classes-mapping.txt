@@ -1,2 +1,0 @@
-commygdx/game/desktop/DesktopLauncher.java
- commygdx.game.desktop.DesktopLauncher
