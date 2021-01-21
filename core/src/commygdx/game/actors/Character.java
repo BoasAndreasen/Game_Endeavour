@@ -54,15 +54,54 @@ public abstract class Character extends Actor {
      * @param collisionBoxes The collision boxes the character could be colliding with
      * @return True if the character is colliding with one or more of the boxes, false otherwise
      */
-    public boolean checkCollision(List<Rectangle> collisionBoxes) {
+    public void checkCollision(List<Rectangle> collisionBoxes) {
+        boolean one = false, two = false, three = false, four = false;
         for (Rectangle collisionBox : collisionBoxes) {
-            //System.out.println(sprite.getBoundingRectangle());
-            //System.out.println(wall);
-            if (sprite.getBoundingRectangle().overlaps(collisionBox)) {
-                movementSystem.setCollided(true);
-                return true;
+            // Coming from left
+            Rectangle rectangle = new Rectangle();
+            rectangle.x = sprite.getBoundingRectangle().x - movementSystem.getMovementSpeed() * 4;
+            rectangle.y = sprite.getBoundingRectangle().y;
+            rectangle.width = sprite.getBoundingRectangle().width;
+            rectangle.height = sprite.getBoundingRectangle().height;
+
+            if (rectangle.overlaps(collisionBox)) {
+                movementSystem.setLeftCollided(true);
+                one = true;
+            }
+
+            // coming from right
+            rectangle.x = sprite.getBoundingRectangle().x + movementSystem.getMovementSpeed() * 4;
+            rectangle.y = sprite.getBoundingRectangle().y;
+
+            if (rectangle.overlaps(collisionBox)) {
+                movementSystem.setRightCollided(true);
+                two = true;
+            }
+            // Coming from up
+            rectangle.x = sprite.getBoundingRectangle().x;
+            rectangle.y = sprite.getBoundingRectangle().y + movementSystem.getMovementSpeed() * 4;
+
+            if (rectangle.overlaps(collisionBox)) {
+                movementSystem.setUpCollided(true);
+                three = true;
+            }
+
+            // Coming from down
+            rectangle.x = sprite.getBoundingRectangle().x;
+            rectangle.y = sprite.getBoundingRectangle().y - movementSystem.getMovementSpeed() * 4;
+
+            if (rectangle.overlaps(collisionBox)) {
+                movementSystem.setDownCollided(true);
+                four = true;
             }
         }
-        return false;
+
+        if (!one && !two && !three && !four) {
+            movementSystem.setDownCollided(false);
+            movementSystem.setUpCollided(false);
+            movementSystem.setLeftCollided(false);
+            movementSystem.setRightCollided(false);
+        }
     }
 }
+

@@ -8,7 +8,7 @@ public class MovementSystem {
     Collider collider;
     float movementSpeed;
     private int direction;
-    private boolean collided;
+    private boolean rightCollided, leftCollided, upCollided, downCollided;
     //direction 1=left 2=right 3=up 4=down
 
     public MovementSystem(Vector2 position, float speed) {
@@ -19,7 +19,6 @@ public class MovementSystem {
 
     public void updatePos(Vector2 position) {
         this.collider = new Collider(position);
-
     }
 
     public void setSpeed(float speed) {
@@ -32,14 +31,12 @@ public class MovementSystem {
      * @return The new position of the character
      */
     public Vector2 left() {
-        //don't move if collided
-        if (direction == 1 && collided) {
-            return collider.position;
-        }
         Vector2 newPos = collider.position;
-        newPos.x -= movementSpeed;
-        this.direction = 1;
-        collided = false;
+        if (!leftCollided) {
+            rightCollided = false;
+            newPos.x -= movementSpeed;
+            direction = 1;
+        }
         return newPos;
     }
 
@@ -49,14 +46,13 @@ public class MovementSystem {
      * @return The new position of the character
      */
     public Vector2 right() {
-        //don't move if collided
-        if (direction == 2 && collided) {
-            return collider.position;
-        }
         Vector2 newPos = collider.position;
-        newPos.x += movementSpeed;
-        this.direction = 2;
-        collided = false;
+        if (!rightCollided) {
+            leftCollided = false;
+            newPos.x += movementSpeed;
+            this.direction = 2;
+        }
+
         return newPos;
     }
 
@@ -66,14 +62,12 @@ public class MovementSystem {
      * @return The new position of the character
      */
     public Vector2 up() {
-        //don't move if collided
-        if (direction == 3 && collided) {
-            return collider.position;
-        }
         Vector2 newPos = collider.position;
-        newPos.y += movementSpeed;
-        this.direction = 3;
-        collided = false;
+        if (!upCollided) {
+            downCollided = false;
+            newPos.y += movementSpeed;
+            this.direction = 3;
+        }
         return newPos;
     }
 
@@ -83,28 +77,48 @@ public class MovementSystem {
      * @return The new position of the character
      */
     public Vector2 down() {
-        //don't move if collided
-        if (direction == 4 && collided) {
-            return collider.position;
-        }
-
         Vector2 newPos = collider.position;
-        newPos.y -= movementSpeed;
-        this.direction = 4;
-        collided = false;
+        if (!downCollided) {
+            upCollided = false;
+            newPos.y -= movementSpeed;
+            this.direction = 4;
+        }
         return newPos;
     }
 
-    public Vector2 getPos() {
-        return collider.position;
-
+    public void setRightCollided(boolean collided) {
+        this.rightCollided = collided;
     }
 
-    public int getDirection() {
-        return direction;
+    public void setLeftCollided(boolean collided) {
+        this.leftCollided = collided;
     }
 
-    public void setCollided(boolean collided) {
-        this.collided = collided;
+    public void setUpCollided(boolean collided) {
+        this.upCollided = collided;
+    }
+
+    public void setDownCollided(boolean collided) {
+        this.downCollided = collided;
+    }
+
+    public boolean isRightCollided() {
+        return rightCollided;
+    }
+
+    public boolean isLeftCollided() {
+        return leftCollided;
+    }
+
+    public boolean isUpCollided() {
+        return upCollided;
+    }
+
+    public boolean isDownCollided() {
+        return downCollided;
+    }
+
+    public float getMovementSpeed() {
+        return movementSpeed;
     }
 }
