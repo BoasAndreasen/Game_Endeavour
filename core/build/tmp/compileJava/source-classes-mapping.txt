@@ -4,34 +4,34 @@ commygdx/game/ShipSystem.java
  commygdx.game.ShipSystem
 commygdx/game/AI/graph/PathNode.java
  commygdx.game.AI.graph.PathNode
-commygdx/game/AI/graph/queue/PriorityQueue.java
- commygdx.game.AI.graph.queue.PriorityQueue
+commygdx/game/stages/Hud.java
+ commygdx.game.stages.Hud
 commygdx/game/AI/InfiltratorAI.java
  commygdx.game.AI.InfiltratorAI
 commygdx/game/AI/graph/queue/PriorityItem.java
  commygdx.game.AI.graph.queue.PriorityItem
+commygdx/game/syst/MovementSystem.java
+ commygdx.game.syst.MovementSystem
 commygdx/game/Screens/GameOverScreen.java
  commygdx.game.Screens.GameOverScreen
-commygdx/game/syst/Collider.java
- commygdx.game.syst.Collider
 commygdx/game/AI/DemoAI.java
  commygdx.game.AI.DemoAI
 commygdx/game/input/PlayerInput.java
  commygdx.game.input.PlayerInput
 commygdx/game/AI/MovementAI.java
  commygdx.game.AI.MovementAI
+commygdx/game/syst/Collider.java
+ commygdx.game.syst.Collider
 commygdx/game/Utility.java
  commygdx.game.Utility
-commygdx/game/AuberGame.java
- commygdx.game.AuberGame
 commygdx/game/Screens/TeleportMenu.java
  commygdx.game.Screens.TeleportMenu
 commygdx/game/AI/graph/PathGraph.java
  commygdx.game.AI.graph.PathGraph
-commygdx/game/stages/Hud.java
- commygdx.game.stages.Hud
-commygdx/game/syst/MovementSystem.java
- commygdx.game.syst.MovementSystem
+commygdx/game/AI/graph/queue/PriorityQueue.java
+ commygdx.game.AI.graph.queue.PriorityQueue
+commygdx/game/actors/Character.java
+ commygdx.game.actors.Character
 commygdx/game/Screens/PlayScreen.java
  commygdx.game.Screens.PlayScreen
 commygdx/game/actors/DemoAuber.java
@@ -40,7 +40,7 @@ commygdx/game/TileWorld.java
  commygdx.game.TileWorld
 commygdx/game/actors/Auber.java
  commygdx.game.actors.Auber
+commygdx/game/AuberGame.java
+ commygdx.game.AuberGame
 commygdx/game/actors/Infiltrator.java
  commygdx.game.actors.Infiltrator
-commygdx/game/actors/Character.java
- commygdx.game.actors.Character

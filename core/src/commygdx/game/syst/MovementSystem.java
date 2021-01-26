@@ -102,22 +102,6 @@ public class MovementSystem {
         this.downCollided = collided;
     }
 
-    public boolean isRightCollided() {
-        return rightCollided;
-    }
-
-    public boolean isLeftCollided() {
-        return leftCollided;
-    }
-
-    public boolean isUpCollided() {
-        return upCollided;
-    }
-
-    public boolean isDownCollided() {
-        return downCollided;
-    }
-
     public float getMovementSpeed() {
         return movementSpeed;
     }

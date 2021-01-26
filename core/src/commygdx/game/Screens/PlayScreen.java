@@ -117,6 +117,7 @@ public class PlayScreen implements Screen {
 
     public void update(float dt) {
         shipStage.act(dt);
+        player.damageAuber(enemies, hud);
         player.arrest(enemies, hud);
     }
 
@@ -138,6 +139,7 @@ public class PlayScreen implements Screen {
         updateInfiltrators(delta);
         teleportCheck();
         player.checkCollision(tiles.getCollisionBoxes());
+        healAuber();
         updateCamera();
 
         //draws game
@@ -184,11 +186,22 @@ public class PlayScreen implements Screen {
      */
     private void drawHallucinate() {
         auberGame.batch.begin();
-        auberGame.batch.draw(hallucinateTexture, 0, 0);
-        auberGame.batch.end();
         if (player.sprite.getBoundingRectangle().overlaps(tiles.getInfirmary())) {
             hud.showHallucinateLabel(false);
             hallucinate = false;
+        }
+        else {
+            auberGame.batch.draw(hallucinateTexture, 0, 0);
+        }
+        auberGame.batch.end();
+    }
+
+    /**
+     * Heals auber back to full health if auber is in the infirmary
+     */
+    public void healAuber() {
+        if (player.sprite.getBoundingRectangle().overlaps(tiles.getInfirmary())) {
+            hud.restoreAuberHealth();
         }
     }
 
@@ -262,16 +275,15 @@ public class PlayScreen implements Screen {
      * Checks if the game needs to switch to: a winning state, a losing state or to stay in a playing state
      */
     private void checkGameState() {
-        if (hud.getInfiltratorsRemaining() == 0) {
+        if (hud.getInfiltratorsRemaining() <= 0) {
             auberGame.setGameState(2);
         }
-        if (hud.getSystemsUp() == 0) {
+        if (hud.getSystemsUp() <= 0 || hud.getAuberHealth() <= 0) {
             auberGame.setGameState(3);
         }
     }
 
     public void updateInfiltrators(float dt) {
-
         for (Infiltrator enemy : enemies) {
             enemy.updateTimers(dt * 100);
 

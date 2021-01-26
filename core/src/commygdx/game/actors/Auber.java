@@ -93,6 +93,23 @@ public class Auber extends Character {
         }
     }
 
+    /**
+     * Damage auber if infiltrators are in range
+     *
+     * @param infiltrators A list of all infiltrators in the game
+     * @param hud          The games HUD overlay
+     */
+    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud) {
+        /* Damage auber if the infiltrators are in range
+         * @param infiltrators this list of infiltrators that are being checked
+         * @hud the hud overlay*/
+        for (Infiltrator infiltrator : infiltrators) {
+            if (Math.abs(infiltrator.getX() - this.getX()) < 100 && Math.abs(infiltrator.getY() - this.getY()) < 100) {
+                hud.auberDamaged();
+            }
+        }
+    }
+
     //moves the camera to the auber when game starts
     public void shuffle() {
         Vector2 position = movementSystem.left();

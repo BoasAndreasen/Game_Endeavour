@@ -18,7 +18,9 @@ import java.util.List;
 public class Hud {
     public Stage stage;
     private int systemsUp;
+    private int auberHealth;
     private final Label systemLabel;
+    private final Label auberLabel;
     private int infiltratorsRemaining;
     private final Label infiltratorLabel;
     private final Label attackLabel;
@@ -35,6 +37,7 @@ public class Hud {
 
         systemsUp = systems.size();
         infiltratorsRemaining = enemies.size();
+        auberHealth = 100;
 
         System.out.format("%d / 15 systems", systemsUp);
         BitmapFont font = new BitmapFont();
@@ -43,6 +46,11 @@ public class Hud {
         //operational systems
         systemLabel = new Label(String.format("%d / 15", systemsUp), new Label.LabelStyle(font, Color.WHITE));
         Label systemTextLabel = new Label("systems operational", new Label.LabelStyle(font, Color.WHITE));
+
+        //auber health
+        auberLabel = new Label(String.format("%d / 100", auberHealth), new Label.LabelStyle(font, Color.WHITE));
+        Label auberTextLabel = new Label("auber health", new Label.LabelStyle(font, Color.WHITE));
+
 
         //remaining infiltrators
         infiltratorLabel = new Label(String.format("%d / 8 ", infiltratorsRemaining), new Label.LabelStyle(font, Color.WHITE));
@@ -60,6 +68,10 @@ public class Hud {
         table.add(systemLabel).expandX().padTop(50);
         table.row();
         table.add(systemTextLabel).expandX().padTop(10);
+        table.row();
+        table.add(auberLabel).expandX().padTop(50);
+        table.row();
+        table.add(auberTextLabel).expandX().padTop(10);
         table.row();
         table.add(infiltratorLabel).expandX().padTop(50);
         table.row();
@@ -80,6 +92,22 @@ public class Hud {
     public void infiltratorCaught() {
         infiltratorsRemaining -= 1;
         infiltratorLabel.setText(String.format("%d / 8", infiltratorsRemaining));
+    }
+
+    /**
+     * Updates the HUD to decrease the health of auber
+     */
+    public void auberDamaged() {
+        auberHealth -= 1;
+        auberLabel.setText(String.format("%d / 100", auberHealth));
+    }
+
+    /**
+     * Updates the HUD to fully restore the health of auber
+     */
+    public void restoreAuberHealth() {
+        this.auberHealth = 100;
+        auberLabel.setText(String.format("%d / 100", auberHealth));
     }
 
     /**
@@ -128,5 +156,9 @@ public class Hud {
 
     public int getSystemsUp() {
         return systemsUp;
+    }
+
+    public int getAuberHealth() {
+        return auberHealth;
     }
 }
