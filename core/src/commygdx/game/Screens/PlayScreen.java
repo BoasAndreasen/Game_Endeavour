@@ -52,6 +52,7 @@ public class PlayScreen implements Screen {
 
 
     public PlayScreen(AuberGame auberGame, boolean demo) {
+        //GitLab Test Comment
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
