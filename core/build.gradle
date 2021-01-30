@@ -15,10 +15,11 @@ sourceSets {
 }
 
 
-// Test Logging
-test {
+tasks.withType(Test) {
     testLogging {
-        showStandardStreams = true
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
     }
 }
 
