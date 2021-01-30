@@ -17,7 +17,7 @@ build:
       - build
       - .gradle
 
-test:
+test_build:
   stage: test
   script: gradle check
   cache:
@@ -26,4 +26,16 @@ test:
     paths:
       - build
       - .gradle
+
+
+run_tests: 
+  stage: test 
+  script: gradle clean test 
+  cache: 
+     key: "$CI_COMMIT_REF_NAME"
+     policy: pull
+     paths:
+      - build
+      - .gradle
+
 
