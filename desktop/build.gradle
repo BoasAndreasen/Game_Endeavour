@@ -33,14 +33,6 @@ task dist(type: Jar) {
     with jar
 }
 
-// Test Logging
-tasks.withType(Test) {
-    testLogging {
-        exceptionFormat "full"
-        events "started", "skipped", "passed", "failed"
-        showStandardStreams true
-    }
-}
 
 dist.dependsOn classes
 
