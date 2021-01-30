@@ -17,7 +17,7 @@ public class GameOverScreen implements Screen {
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
         font = new BitmapFont();
-        font.getData().setScale(5f);
+        font.getData().setScale(5f) ;
     }
 
     @Override
