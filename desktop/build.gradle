@@ -33,6 +33,13 @@ task dist(type: Jar) {
     with jar
 }
 
+// Test Logging
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
 
 dist.dependsOn classes
 

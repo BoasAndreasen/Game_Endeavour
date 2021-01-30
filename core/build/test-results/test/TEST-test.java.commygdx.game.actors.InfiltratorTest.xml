@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.java.commygdx.game.actors.InfiltratorTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-01-25T15:58:55" hostname="DESKTOP-OGPGK3B" time="0.065">
+<testsuite name="test.java.commygdx.game.actors.InfiltratorTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2021-01-30T10:53:29" hostname="DESKTOP-OGPGK3B" time="0.014">
   <properties/>
-  <testcase name="resetTexture()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.017"/>
-  <testcase name="getPowerDuration()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.002"/>
-  <testcase name="arrest()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.002"/>
-  <testcase name="updateTimers()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.002"/>
-  <testcase name="getTexture()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.005"/>
+  <testcase name="resetTexture()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="getPowerDuration()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
+  <testcase name="arrest()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="updateTimers()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="getTexture()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
   <testcase name="getPowerCooldown()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
-  <testcase name="usePower()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="usePower()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
   <testcase name="act()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
-  <testcase name="isAvailable()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.002"/>
-  <testcase name="handleMovement()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
-  <testcase name="startDestruction()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
-  <testcase name="stopPower()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
-  <testcase name="getIsArrested()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
+  <testcase name="isAvailable()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
+  <testcase name="handleMovement()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.001"/>
+  <testcase name="startDestruction()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="stopPower()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
+  <testcase name="getIsArrested()" classname="test.java.commygdx.game.actors.InfiltratorTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

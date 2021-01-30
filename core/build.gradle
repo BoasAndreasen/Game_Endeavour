@@ -14,4 +14,13 @@ sourceSets {
     }
 }
 
+
+// Test Logging
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
+
 eclipse.project.name = appName + "-core"
