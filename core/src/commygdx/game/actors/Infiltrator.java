@@ -63,7 +63,7 @@ public class Infiltrator extends Character {
             screen.setHallucinate(true);
         }
         if (power == 3) {
-            sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorShapeshift.png")));
+            sprite.setTexture(new Texture(Gdx.files.internal("Characters/npcSprite.png")));
         }
         if (power == 4) {
             movementSystem.setSpeed(20f);
