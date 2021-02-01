@@ -21,6 +21,7 @@ import commygdx.game.TileWorld;
 import commygdx.game.Utility;
 import commygdx.game.actors.DemoAuber;
 import commygdx.game.actors.Infiltrator;
+import commygdx.game.actors.NPC;
 import commygdx.game.stages.Hud;
 import commygdx.game.actors.Auber;
 import java.io.BufferedReader;
@@ -35,6 +36,8 @@ public class PlayScreen implements Screen {
     private final TiledMap map;
     private final OrthogonalTiledMapRenderer renderer;
     public ArrayList<Infiltrator> enemies;
+    public ArrayList<NPC> people;
+
     //Graph used for AI pathfinding
     public PathGraph graph;
     private final boolean demo;
@@ -104,6 +107,24 @@ public class PlayScreen implements Screen {
         //Adding infiltrators to stage
         for (Infiltrator enemy : enemies) {
             shipStage.addActor(enemy);
+        }
+
+        //Creating and placing NPCs
+        people = new ArrayList<NPC>(Arrays.asList(
+                new NPC(new Vector2(4700, 2000), auberGame.batch, graph),
+                new NPC(new Vector2(4800, 2300), auberGame.batch, graph),
+                new NPC(new Vector2(5000, 7356), auberGame.batch, graph),
+                new NPC(new Vector2(4732, 7000), auberGame.batch, graph),
+                new NPC(new Vector2(4732, 7500), auberGame.batch, graph),
+                new NPC(new Vector2(4732, 7800), auberGame.batch, graph),
+                new NPC(new Vector2(4200, 7800), auberGame.batch, graph),
+                new NPC(new Vector2(5400, 7800), auberGame.batch, graph)
+        ));
+
+        shipStage.addActor(player);
+        //Adding NPCs to stage
+        for (NPC person : people) {
+            shipStage.addActor(person);
         }
     }
 
