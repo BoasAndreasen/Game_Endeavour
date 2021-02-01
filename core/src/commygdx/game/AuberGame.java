@@ -65,4 +65,6 @@ public class AuberGame extends com.badlogic.gdx.Game {
     public void setGameState(int gameState) {
         this.gameState = gameState;
     }
+
+    public int getGameState(){return gameState;}
 }

@@ -135,7 +135,7 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
         //updates game
-        checkGameState();
+        checkGameState(hud.getInfiltratorsRemaining(), hud.getSystemsUp(), hud.getAuberHealth());
         update(delta);
         updateInfiltrators(delta);
         teleportCheck();
@@ -275,11 +275,19 @@ public class PlayScreen implements Screen {
     /**
      * Checks if the game needs to switch to: a winning state, a losing state or to stay in a playing state
      */
-    private void checkGameState() {
-        if (hud.getInfiltratorsRemaining() <= 0) {
+
+    /**
+     * Brian/20210131
+     * modify for junit testings
+     * @param infiltratorRemaining infiltrator remaining
+     * @param systemUp system remaining
+     * @param auberHealth auber health remaining
+     */
+    public void checkGameState(int infiltratorRemaining, int systemUp, int auberHealth) {
+        if (infiltratorRemaining <= 0) {
             auberGame.setGameState(2);
         }
-        if (hud.getSystemsUp() <= 0 || hud.getAuberHealth() <= 0) {
+        if (systemUp <= 0 || auberHealth <= 0) {
             auberGame.setGameState(3);
         }
     }

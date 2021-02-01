@@ -1,4 +1,4 @@
-package test.java.commygdx.game.actors;
+package test.java.commygdx.game;
 
 import org.junit.jupiter.api.Test;
 
