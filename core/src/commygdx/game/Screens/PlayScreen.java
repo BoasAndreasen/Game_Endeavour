@@ -1,6 +1,7 @@
 package commygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,11 +23,17 @@ import commygdx.game.Utility;
 import commygdx.game.actors.DemoAuber;
 import commygdx.game.actors.Infiltrator;
 import commygdx.game.actors.NPC;
-import commygdx.game.stages.Hud;
-import commygdx.game.actors.Auber;
 import java.io.BufferedReader;
 import java.io.IOException;
+import commygdx.game.stages.Hud;
+import commygdx.game.actors.Auber;
+
+import java.io.*;
 import java.util.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class PlayScreen implements Screen {
     protected AuberGame auberGame;
@@ -37,10 +44,13 @@ public class PlayScreen implements Screen {
     private final OrthogonalTiledMapRenderer renderer;
     public ArrayList<Infiltrator> enemies;
     public ArrayList<NPC> people;
-
     //Graph used for AI pathfinding
     public PathGraph graph;
+    private boolean paused;
+    private boolean saved;
     private final boolean demo;
+    // If specified in IntroScreen then load save
+    private final boolean loadFromSave;
 
     //Scene2D
     protected Auber player;
@@ -48,17 +58,20 @@ public class PlayScreen implements Screen {
 
     //Used for the infiltrator's hallucinate power
     private boolean hallucinate;
+    private final Texture pauseTexture;
+    private final Texture pauseTexture2;
     private final Texture hallucinateTexture;
 
     private final TileWorld tiles;
     protected int scale;
 
 
-    public PlayScreen(AuberGame auberGame, boolean demo) {
+    public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave) {
         //GitLab Test Comment
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
+        this.loadFromSave = loadFromSave;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
         /*Possible fullscreen
@@ -76,6 +89,10 @@ public class PlayScreen implements Screen {
 
         tiles = new TileWorld(this);
 
+        //Used for pause screen
+        pauseTexture = new Texture("pauseImage.png");
+        pauseTexture2 = new Texture("pauseImage2.png");
+
         //Used for the infiltrator's hallucinate power
         hallucinateTexture = new Texture("hallucinateV2.png");
         hallucinate = false;
@@ -89,51 +106,68 @@ public class PlayScreen implements Screen {
     private void setupShipStage() {
         shipStage = new Stage(new StretchViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam));
         createAuber();
-        player.sprite.setPosition(450 * scale, 778 * scale);
-
-        //Creating and placing infiltrators
-        enemies = new ArrayList<Infiltrator>(Arrays.asList(
-                new Infiltrator(new Vector2(4700, 2000), auberGame.batch, 1, graph),
-                new Infiltrator(new Vector2(4800, 2300), auberGame.batch, 2, graph),
-                new Infiltrator(new Vector2(5000, 7356), auberGame.batch, 3, graph),
-                new Infiltrator(new Vector2(4732, 7000), auberGame.batch, 4, graph),
-                new Infiltrator(new Vector2(4732, 7500), auberGame.batch, 1, graph),
-                new Infiltrator(new Vector2(4732, 7800), auberGame.batch, 1, graph),
-                new Infiltrator(new Vector2(4200, 7800), auberGame.batch, 2, graph),
-                new Infiltrator(new Vector2(5400, 7800), auberGame.batch, 2, graph)
-        ));
+        createEnemies();
+        createNPCs();
 
         shipStage.addActor(player);
         //Adding infiltrators to stage
         for (Infiltrator enemy : enemies) {
             shipStage.addActor(enemy);
         }
-
-        //Creating and placing NPCs
-        people = new ArrayList<NPC>(Arrays.asList(
-                new NPC(new Vector2(4700, 2000), auberGame.batch, graph),
-                new NPC(new Vector2(4800, 2300), auberGame.batch, graph),
-                new NPC(new Vector2(5000, 7356), auberGame.batch, graph),
-                new NPC(new Vector2(4732, 7000), auberGame.batch, graph),
-                new NPC(new Vector2(4732, 7500), auberGame.batch, graph),
-                new NPC(new Vector2(4732, 7800), auberGame.batch, graph),
-                new NPC(new Vector2(4200, 7800), auberGame.batch, graph),
-                new NPC(new Vector2(5400, 7800), auberGame.batch, graph)
-        ));
-
-        shipStage.addActor(player);
-        //Adding NPCs to stage
         for (NPC person : people) {
             shipStage.addActor(person);
         }
     }
 
-    protected void createAuber() {
+    private void createAuber() {
         //A different version of Auber is used for the player depending on if it's a demo or not
         if (!demo) {
-            player = new Auber(new Vector2(450 * scale, 778 * scale), auberGame.batch);
+            if (!loadFromSave){
+                player = new Auber(new Vector2(450 * scale, 778 * scale));
+            }
+            else{
+                loadAuberSave();
+            }
         } else {
-            player = new DemoAuber(new Vector2(450 * scale, 778 * scale), auberGame.batch, graph);
+            player = new DemoAuber(new Vector2(450 * scale, 778 * scale), graph);
+        }
+    }
+
+    private void createEnemies(){
+        if (!loadFromSave){
+            //Creating and placing infiltrators
+            enemies = new ArrayList<Infiltrator>(Arrays.asList(
+                    new Infiltrator(new Vector2(4700, 2000), 1, graph),
+                    new Infiltrator(new Vector2(4800, 2300), 2, graph),
+                    new Infiltrator(new Vector2(5000, 7356), 3, graph),
+                    new Infiltrator(new Vector2(4732, 7000), 4, graph),
+                    new Infiltrator(new Vector2(4732, 7500), 1, graph),
+                    new Infiltrator(new Vector2(4732, 7800), 1, graph),
+                    new Infiltrator(new Vector2(4200, 7800), 2, graph),
+                    new Infiltrator(new Vector2(5400, 7800), 2, graph)
+            ));
+        }
+        else{
+            loadEnemySave();
+        }
+    }
+
+    private void createNPCs() {
+        if (!loadFromSave){
+            //Creating and placing infiltrators
+            people = new ArrayList<NPC>(Arrays.asList(
+                    new NPC(new Vector2(4700, 2000), graph),
+                    new NPC(new Vector2(4800, 2300), graph),
+                    new NPC(new Vector2(5000, 7356), graph),
+                    new NPC(new Vector2(4732, 7000), graph),
+                    new NPC(new Vector2(4732, 7500), graph),
+                    new NPC(new Vector2(4732, 7800), graph),
+                    new NPC(new Vector2(4200, 7800), graph),
+                    new NPC(new Vector2(5400, 7800), graph)
+            ));
+        }
+        else{
+            loadNPCSave();
         }
     }
 
@@ -155,26 +189,50 @@ public class PlayScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        //updates game
-        checkGameState(hud.getInfiltratorsRemaining(), hud.getSystemsUp(), hud.getAuberHealth());
-        update(delta);
-        updateInfiltrators(delta);
-        teleportCheck();
-        player.checkCollision(tiles.getCollisionBoxes());
-        healAuber();
-        updateCamera();
+        if (!paused) {
+            //updates game
+            checkGameState();
+            update(delta);
+            updateInfiltrators(delta);
+            teleportCheck();
+            player.checkCollision(tiles.getCollisionBoxes());
+            healAuber();
+        }
 
         //draws game
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
         shipStage.draw();
-
+        updateCamera();
         if (hallucinate) {
             drawHallucinate();
         }
-        hud.updateAttacks(tiles.getSystems());
-        hud.stage.draw();
+        if (paused) {
+            drawPause();
+        }
+        else {
+            hud.updateAttacks(tiles.getSystems());
+            hud.stage.draw();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            paused = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            paused = false;
+            saved = false;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.BACKSPACE) && paused) {
+            Gdx.app.exit();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && paused) {
+            // Only allow game to be saved once per pause
+            if (!saved) {
+                saveGame();
+            }
+            saved = true;
+        }
     }
 
     private void updateCamera() {
@@ -219,6 +277,130 @@ public class PlayScreen implements Screen {
     }
 
     /**
+     * Draws pause message if game is paused
+     */
+    private void drawPause() {
+        auberGame.batch.begin();
+        if (!saved) {
+            auberGame.batch.draw(pauseTexture, (Gdx.graphics.getWidth()) / 2.0f, (Gdx.graphics.getHeight()) / 2.5f);
+        }
+        else {
+            auberGame.batch.draw(pauseTexture2, (Gdx.graphics.getWidth()) / 2.0f, (Gdx.graphics.getHeight()) / 2.5f);
+        }
+        auberGame.batch.end();
+    }
+
+    /**
+     * Load auber from save
+     */
+    private void loadAuberSave() {
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try(FileReader reader = new FileReader("save.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sprList1 = (JSONArray) obj;
+            JSONObject empObj = (JSONObject) sprList1.get(0);
+            System.out.println(empObj);
+            JSONObject j = (JSONObject) empObj.get("sprite0");
+
+            double x = (double) j.get("x");
+            double y = (double) j.get("y");
+            player = new Auber(new Vector2((float) x, (float) y));
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Load enemy from save
+     */
+    private void loadEnemySave() {
+        ArrayList<Infiltrator> localEnemies = new ArrayList<>();
+
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try(FileReader reader = new FileReader("save.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sprList = (JSONArray) obj;
+
+            for (int i = 1; i < 9; i++) {
+                System.out.println(i);
+                JSONObject e = (JSONObject) sprList.get(i);
+                JSONObject empObj = (JSONObject) e.get("sprite" + i);
+                double x = (double) empObj.get("x");
+                double y = (double) empObj.get("y");
+                System.out.println("x: " + x);
+                System.out.println("y: " + y);
+                Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y), 1, graph);
+                localEnemies.add(inf);
+            }
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+
+        //Creating and placing infiltrators
+        enemies = new ArrayList<>(localEnemies);
+    }
+
+    /**
+     * Load npc from save
+     */
+    private void loadNPCSave() {
+        ArrayList<NPC> localNPCs = new ArrayList<>();
+
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try(FileReader reader = new FileReader("save.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sprList = (JSONArray) obj;
+
+            for (int i = 9; i < sprList.size(); i++) {
+                JSONObject e = (JSONObject) sprList.get(i);
+                JSONObject empObj = (JSONObject) e.get("sprite" + i);
+                double x = (double) empObj.get("x");
+                double y = (double) empObj.get("y");
+                System.out.println("x: " + x);
+                System.out.println("y: " + y);
+                NPC npc = new NPC(new Vector2((float) x, (float) y), graph);
+                localNPCs.add(npc);
+            }
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+        //Creating and placing npcs
+        people = new ArrayList<>(localNPCs);
+    }
+
+    /**
+     * Saves game in pause screen
+     */
+    private void saveGame() {
+        //Write JSON
+        JSONArray sprList = new JSONArray();
+        for (int i = 0; i < shipStage.getActors().size; i++) {
+            JSONObject spr = new JSONObject();
+            spr.put("x", shipStage.getActors().get(i).getX());
+            spr.put("y", shipStage.getActors().get(i).getY());
+
+
+            JSONObject sprObj = new JSONObject();
+            sprObj.put("sprite" + i, spr);
+            sprList.add(sprObj);
+        }
+
+        try(FileWriter file = new FileWriter("save.json")) {
+            file.write(sprList.toJSONString());
+            file.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Heals auber back to full health if auber is in the infirmary
      */
     public void healAuber() {
@@ -226,7 +408,6 @@ public class PlayScreen implements Screen {
             hud.restoreAuberHealth();
         }
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -296,19 +477,11 @@ public class PlayScreen implements Screen {
     /**
      * Checks if the game needs to switch to: a winning state, a losing state or to stay in a playing state
      */
-
-    /**
-     * Brian/20210131
-     * modify for junit testings
-     * @param infiltratorRemaining infiltrator remaining
-     * @param systemUp system remaining
-     * @param auberHealth auber health remaining
-     */
-    public void checkGameState(int infiltratorRemaining, int systemUp, int auberHealth) {
-        if (infiltratorRemaining <= 0) {
+    private void checkGameState() {
+        if (hud.getInfiltratorsRemaining() <= 0) {
             auberGame.setGameState(2);
         }
-        if (systemUp <= 0 || auberHealth <= 0) {
+        if (hud.getSystemsUp() <= 0 || hud.getAuberHealth() <= 0) {
             auberGame.setGameState(3);
         }
     }

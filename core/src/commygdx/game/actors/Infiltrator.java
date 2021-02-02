@@ -12,7 +12,7 @@ import commygdx.game.ShipSystem;
 public class Infiltrator extends Character {
     private final InfiltratorAI ai;
     private boolean isArrested;
-    //0=none, 1=invisibility, 2=hallucination 3=shapeshift 4=speed booast
+    //0=none, 1=invisibility, 2=hallucination 3=shapeshift 4=speed boost
     private final int power;
     private float powerCoolDown;
     private float powerDuration;
@@ -21,8 +21,8 @@ public class Infiltrator extends Character {
     private float destructionTimer = 0;
     private boolean facingRight;
 
-    public Infiltrator(Vector2 position, SpriteBatch batch, int power, PathGraph graph) {
-        super(position, batch);
+    public Infiltrator(Vector2 position, int power, PathGraph graph) {
+        super(position);
         setPosition(position.x, position.y);
         this.power = power;
         powerOn = false;

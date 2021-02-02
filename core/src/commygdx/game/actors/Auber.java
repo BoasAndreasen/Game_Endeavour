@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public class Auber extends Character {
     protected boolean facingRight;
 
-    public Auber(Vector2 position, SpriteBatch batch) {
-        super(position, batch);
+    public Auber(Vector2 position) {
+        super(position);
         shuffle();
         movementSystem.setSpeed(6f);
         facingRight = true;

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class DemoAuber extends Auber {
     private final DemoAI ai;
 
-    public DemoAuber(Vector2 position, SpriteBatch batch, PathGraph graph) {
-        super(position, batch);
+    public DemoAuber(Vector2 position, PathGraph graph) {
+        super(position);
         ai = new DemoAI(graph);
     }
 

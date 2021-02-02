@@ -14,7 +14,7 @@ public class IntroScreen implements Screen {
 
     public IntroScreen(AuberGame game) {
         this.game = game;
-        introTexture = new Texture("IntroV2.png");
+        introTexture = new Texture("IntroV3.png");
         OrthographicCamera gamecam = new OrthographicCamera();
         gamecam.setToOrtho(true, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
     }
@@ -36,12 +36,17 @@ public class IntroScreen implements Screen {
 
         //player enters either playing mode or demo mode
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            game.createPlayScreen(false);
+            game.createPlayScreen(false, false);
+            game.gameState = 0;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            game.createPlayScreen(false, true);
             game.gameState = 0;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            game.createPlayScreen(true);
+            game.createPlayScreen(true, false);
             game.gameState = 0;
         }
     }

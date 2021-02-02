@@ -23,7 +23,6 @@ public class PlayerInput {
             return 4;
         }
         return 0;
-
     }
 
     /**

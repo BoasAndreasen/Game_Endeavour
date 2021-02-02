@@ -11,8 +11,8 @@ public class NPC extends Character {
     private final DemoAI ai;
     private boolean facingRight;
 
-    public NPC(Vector2 position, SpriteBatch batch, PathGraph graph) {
-        super(position, batch);
+    public NPC(Vector2 position, PathGraph graph) {
+        super(position);
         this.setPosition(position.x, position.y);
         this.ai = new DemoAI(graph);
         this.facingRight = true;
