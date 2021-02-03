@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,10 +27,13 @@ public class Hud {
     private final Label attackLabel;
     private final Label hallucinateLabel;
 
+
+
     //used for buttons,text, etc
     public Hud(SpriteBatch sb, ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
+
 
         Table table = new Table();
         table.top();
@@ -97,8 +101,14 @@ public class Hud {
     /**
      * Updates the HUD to decrease the health of auber
      */
-    public void auberDamaged() {
-        auberHealth -= 1;
+    public void auberDamaged(boolean power) {
+        if (power==false){
+            auberHealth -= 1;
+        }
+        else{
+            auberHealth-=0.8;
+        }
+
         auberLabel.setText(String.format("%d / 100", auberHealth));
     }
 
@@ -107,6 +117,16 @@ public class Hud {
      */
     public void restoreAuberHealth() {
         this.auberHealth = 100;
+        auberLabel.setText(String.format("%d / 100", auberHealth));
+    }
+
+    public void healthPower(){
+        if (this.auberHealth<=80) {
+           this.auberHealth+=20;
+        }
+        if ((this.auberHealth>80) && (this.auberHealth<100)){
+            this.auberHealth=100;
+        }
         auberLabel.setText(String.format("%d / 100", auberHealth));
     }
 

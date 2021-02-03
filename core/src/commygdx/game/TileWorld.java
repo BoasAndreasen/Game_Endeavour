@@ -5,6 +5,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import commygdx.game.Screens.PlayScreen;
+import org.w3c.dom.css.Rect;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -12,6 +14,11 @@ public class TileWorld {
     private final Hashtable<String, Rectangle> teleporters;
     private final ArrayList<ShipSystem> shipSystems;
     private final ArrayList<Rectangle> collisionBoxes;
+    private Rectangle healthpowerUp;
+    private Rectangle invispowerUp;
+    private Rectangle slowpowerUp;
+    private Rectangle speedpowerUp;
+    private Rectangle reduceDamage;
     private Rectangle infirmary;
     private Rectangle brig;
     private Rectangle crew;
@@ -60,6 +67,31 @@ public class TileWorld {
             Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
             collisionBoxes.add(rect);
         }
+
+        for (MapObject object:map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect= ((RectangleMapObject)object).getRectangle();
+            rect.x=rect.x*scale +rect.width*scale/2;
+            rect.y = rect.y * scale + rect.height * scale / 2;
+            rect.width=25;
+            rect.height=25;
+            healthpowerUp=rect;
+        }
+        for (MapObject object:map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            invispowerUp=rect;
+        }
+        for (MapObject object:map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            speedpowerUp=rect;
+        }
+        for (MapObject object:map.getLayers().get(14).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            slowpowerUp=rect;
+        }
+        for (MapObject object:map.getLayers().get(15).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            reduceDamage=rect;
+        }
     }
 
     /**
@@ -99,6 +131,26 @@ public class TileWorld {
 
     public Hashtable<String, Rectangle> getTeleporters() {
         return teleporters;
+    }
+
+    public Rectangle getHealthpowerUp() {
+        return healthpowerUp;
+    }
+
+    public Rectangle getInvispowerUp() {
+        return invispowerUp;
+    }
+
+    public Rectangle getReduceDamage() {
+        return reduceDamage;
+    }
+
+    public Rectangle getSlowpowerUp() {
+        return slowpowerUp;
+    }
+
+    public Rectangle getSpeedpowerUp() {
+        return speedpowerUp;
     }
 
     public Rectangle getInfirmary() {

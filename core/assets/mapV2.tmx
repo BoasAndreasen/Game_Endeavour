@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="229">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="63" tilewidth="16" tileheight="16" infinite="0" nextlayerid="33" nextobjectid="237">
  <tileset firstgid="1" source="../../../../tilesheet.tsx"/>
  <layer id="1" name="bg" width="50" height="63">
   <data encoding="csv">
@@ -210,6 +210,21 @@
  </objectgroup>
  <objectgroup id="27" name="engine">
   <object id="223" x="272" y="688" width="256" height="208"/>
+ </objectgroup>
+ <objectgroup id="28" name="healthpower">
+  <object id="229" x="425" y="853" width="12" height="12"/>
+ </objectgroup>
+ <objectgroup id="29" name="invispower">
+  <object id="230" x="452.667" y="392.667" width="12" height="12"/>
+ </objectgroup>
+ <objectgroup id="30" name="speedpower">
+  <object id="232" x="154.667" y="610.667" width="12" height="12"/>
+ </objectgroup>
+ <objectgroup id="31" name="slowpower">
+  <object id="233" x="376" y="647.333" width="12" height="12"/>
+ </objectgroup>
+ <objectgroup id="32" name="rdamagepower">
+  <object id="234" x="640.667" y="582" width="12" height="12"/>
  </objectgroup>
  <layer id="3" name="obj" width="50" height="63">
   <data encoding="csv">

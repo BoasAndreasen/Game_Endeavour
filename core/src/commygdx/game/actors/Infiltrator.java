@@ -176,4 +176,10 @@ public class Infiltrator extends Character {
     public boolean getIsArrested() {
         return isArrested;
     }
+
+    public void setSpeed(float speed){
+        movementSystem.setSpeed(speed);
+    }
 }
+
+

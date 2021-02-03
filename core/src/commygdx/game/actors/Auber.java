@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import commygdx.game.TileWorld;
 import commygdx.game.input.PlayerInput;
 import commygdx.game.stages.Hud;
+import org.w3c.dom.css.Rect;
+
 import java.util.ArrayList;
 
 public class Auber extends Character {
@@ -73,6 +75,44 @@ public class Auber extends Character {
         return false;
     }
 
+    public String powerUpCheck(TileWorld tiles){
+
+        Rectangle healthrect= tiles.getHealthpowerUp();
+        Rectangle invisrect= tiles.getInvispowerUp();
+        Rectangle slowrect = tiles.getSlowpowerUp();
+        Rectangle speedrect= tiles.getSpeedpowerUp();
+        Rectangle reducerect= tiles.getReduceDamage();
+
+
+
+            if (sprite.getBoundingRectangle().contains(slowrect)) {
+                System.out.println("Sl");
+                return "Slow";
+            }
+            if (sprite.getBoundingRectangle().contains(speedrect)) {
+                System.out.println('S');
+                return "Speed";
+            }
+            if (sprite.getBoundingRectangle().contains(reducerect)) {
+                System.out.println('R');
+                return "Rdmg";
+            }
+            if (sprite.getBoundingRectangle().contains(healthrect)) {
+                System.out.println('H');
+                return "Health";
+            }
+            if (sprite.getBoundingRectangle().contains(invisrect)) {
+                System.out.println('I');
+                return "Invis";
+            }
+            else{
+                return "null";
+            }
+
+
+
+    }
+
     /**
      * Arrests any infiltrators in range of the player
      *
@@ -99,15 +139,22 @@ public class Auber extends Character {
      * @param infiltrators A list of all infiltrators in the game
      * @param hud          The games HUD overlay
      */
-    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud) {
+    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud,boolean power) {
         /* Damage auber if the infiltrators are in range
          * @param infiltrators this list of infiltrators that are being checked
          * @hud the hud overlay*/
         for (Infiltrator infiltrator : infiltrators) {
             if (Math.abs(infiltrator.getX() - this.getX()) < 100 && Math.abs(infiltrator.getY() - this.getY()) < 100) {
-                hud.auberDamaged();
+                hud.auberDamaged(power);
             }
         }
+    }
+
+    public void goInvisible()  {
+        sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
+
+
+
     }
 
     //moves the camera to the auber when game starts

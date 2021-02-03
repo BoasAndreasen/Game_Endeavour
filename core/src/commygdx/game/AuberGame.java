@@ -55,6 +55,10 @@ public class AuberGame extends com.badlogic.gdx.Game {
             //exit teleport screen
             setScreen(screen);
         }
+
+
+
+
     }
 
     @Override

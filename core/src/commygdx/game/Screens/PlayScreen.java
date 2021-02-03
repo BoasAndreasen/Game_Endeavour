@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.*;
 import commygdx.game.AI.graph.PathGraph;
 import commygdx.game.AI.graph.PathNode;
@@ -62,6 +63,17 @@ public class PlayScreen implements Screen {
     private final Texture pauseTexture2;
     private final Texture hallucinateTexture;
 
+    private Texture health;
+    private Texture invis;
+    private Texture slow;
+    private Texture speed;
+    private Texture rdmg;
+    private Image h;
+    private Image i;
+    private Image sl;
+    private Image sp;
+    private Image r;
+
     private final TileWorld tiles;
     protected int scale;
 
@@ -76,6 +88,7 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
         /*Possible fullscreen
         Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());*/
+
 
         //load map
         TmxMapLoader mapLoader = new TmxMapLoader();
@@ -173,7 +186,7 @@ public class PlayScreen implements Screen {
 
     public void update(float dt) {
         shipStage.act(dt);
-        player.damageAuber(enemies, hud);
+        player.damageAuber(enemies, hud,false);
         player.arrest(enemies, hud);
     }
 
@@ -195,6 +208,11 @@ public class PlayScreen implements Screen {
             update(delta);
             updateInfiltrators(delta);
             teleportCheck();
+            try {
+                powerupCheck();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             player.checkCollision(tiles.getCollisionBoxes());
             healAuber();
         }
@@ -258,6 +276,45 @@ public class PlayScreen implements Screen {
         if (!auberGame.onTeleport.equals("true") && !auberGame.onTeleport.equals("false")) {
             teleportAuber();
             auberGame.onTeleport = "false";
+        }
+    }
+
+    private void powerupCheck() throws InterruptedException {
+        if (demo) {
+            return;
+        }
+        if (player.powerUpCheck(tiles)!= "null"){
+            if (player.powerUpCheck(tiles)=="Health"){
+                hud.healthPower();
+                System.out.println("Health");
+            }
+            if (player.powerUpCheck(tiles)=="Invis"){
+                player.goInvisible();
+                System.out.println("Invis");
+            }
+            if (player.powerUpCheck(tiles)=="Slow"){
+                System.out.println("Slow");
+                for (int x = 0; x< enemies.size(); x++){
+                        enemies.get(x).setSpeed(4f);
+                    }
+            }
+            if (player.powerUpCheck(tiles)=="Speed"){
+                System.out.println("Speed");
+                player.movementSystem.setSpeed(9f);
+            }
+            if (player.powerUpCheck(tiles)=="Rdmg"){
+                System.out.println("R");
+                player.damageAuber(enemies,hud,true);
+
+            }
+        }
+        else{
+            player.sprite.setTexture(new Texture(Gdx.files.internal("Characters/auberSprite.png")));
+            for (int x = 0; x< enemies.size(); x++){
+                enemies.get(x).setSpeed(6f);
+            }
+            player.movementSystem.setSpeed(6f);
+
         }
     }
 
