@@ -6,8 +6,8 @@ commygdx/game/AI/graph/queue/PriorityItem.java
  commygdx.game.AI.graph.queue.PriorityItem
 commygdx/game/actors/Character.java
  commygdx.game.actors.Character
-commygdx/game/Screens/TeleportMenu.java
- commygdx.game.Screens.TeleportMenu
+commygdx/game/actors/NPC.java
+ commygdx.game.actors.NPC
 commygdx/game/AI/DemoAI.java
  commygdx.game.AI.DemoAI
 commygdx/game/input/PlayerInput.java
@@ -36,8 +36,8 @@ test/java/commygdx/game/CharacterTest.java
  test.java.commygdx.game.CharacterTest
 commygdx/game/AI/graph/PathGraph.java
  commygdx.game.AI.graph.PathGraph
-commygdx/game/actors/NPC.java
- commygdx.game.actors.NPC
+commygdx/game/Screens/TeleportMenu.java
+ commygdx.game.Screens.TeleportMenu
 commygdx/game/Screens/PlayScreen.java
  commygdx.game.Screens.PlayScreen
 commygdx/game/actors/DemoAuber.java

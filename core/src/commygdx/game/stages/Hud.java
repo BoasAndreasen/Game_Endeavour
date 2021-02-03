@@ -27,9 +27,9 @@ public class Hud {
     private final Label hallucinateLabel;
 
     //used for buttons,text, etc
-    public Hud(SpriteBatch sb, ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems) {
+    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, sb);
+        stage = new Stage(viewport);
 
         Table table = new Table();
         table.top();
@@ -39,7 +39,7 @@ public class Hud {
         infiltratorsRemaining = enemies.size();
         auberHealth = 100;
 
-        System.out.format("%d / 15 systems", systemsUp);
+        //System.out.format("%d / 15 systems", systemsUp);
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3f);
 
@@ -160,5 +160,9 @@ public class Hud {
 
     public int getAuberHealth() {
         return auberHealth;
+    }
+
+    public void setAuberHealth(int health) {
+        this.auberHealth = health;
     }
 }
