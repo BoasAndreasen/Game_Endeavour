@@ -33,7 +33,7 @@ public class Hud {
 
 
     //used for buttons,text, etc
-    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems) {
+    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
 
@@ -43,8 +43,15 @@ public class Hud {
         table.setFillParent(true);
 
         systemsUp = systems.size();
-        infiltratorsRemaining = enemies.size();
-        auberHealth = 100;
+
+        int localIsarrested = 0;
+        for (int i = 0; i < enemies.size(); i++) {
+            if (!enemies.get(i).getIsArrested()) {
+                localIsarrested += 1;
+            }
+        }
+        infiltratorsRemaining = localIsarrested;
+        this.auberHealth = auberHealth;
 
         //System.out.format("%d / 15 systems", systemsUp);
         BitmapFont font = new BitmapFont();
