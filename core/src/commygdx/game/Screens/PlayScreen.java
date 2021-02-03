@@ -296,29 +296,35 @@ public class PlayScreen implements Screen {
         if (player.powerUpCheck(tiles)!= "null"){
             if (player.powerUpCheck(tiles)=="Health"){
                 hud.healthPower();
+                hud.powerUpLabel.setText("Health");
                 System.out.println("Health");
             }
             if (player.powerUpCheck(tiles)=="Invis"){
                 player.goInvisible();
+                hud.powerUpLabel.setText("Invisible");
                 System.out.println("Invis");
             }
-            if (player.powerUpCheck(tiles)=="Slow"){
+            if (player.powerUpCheck(tiles)=="Slow Infiltrators"){
                 System.out.println("Slow");
+                hud.powerUpLabel.setText("Slow");
                 for (int x = 0; x< enemies.size(); x++){
                         enemies.get(x).setSpeed(4f);
                     }
             }
             if (player.powerUpCheck(tiles)=="Speed"){
                 System.out.println("Speed");
+                hud.powerUpLabel.setText("Speed");
                 player.movementSystem.setSpeed(9f);
             }
             if (player.powerUpCheck(tiles)=="Rdmg"){
                 System.out.println("R");
+                hud.powerUpLabel.setText("Reduce Damage");
                 player.damageAuber(enemies,hud,true);
 
             }
         }
         else{
+            hud.powerUpLabel.setText("None");
             player.sprite.setTexture(new Texture(Gdx.files.internal("Characters/auberSprite.png")));
             for (int x = 0; x< enemies.size(); x++){
                 enemies.get(x).setSpeed(6f);

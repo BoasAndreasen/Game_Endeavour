@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import commygdx.game.AuberGame;
 import commygdx.game.ShipSystem;
 import commygdx.game.actors.Infiltrator;
+import jdk.nashorn.internal.runtime.doubleconv.CachedPowers;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class Hud {
     private final Label infiltratorLabel;
     private final Label attackLabel;
     private final Label hallucinateLabel;
+    public final Label powerUpLabel;
 
 
 
@@ -55,6 +58,9 @@ public class Hud {
         auberLabel = new Label(String.format("%d / 100", auberHealth), new Label.LabelStyle(font, Color.WHITE));
         Label auberTextLabel = new Label("auber health", new Label.LabelStyle(font, Color.WHITE));
 
+        //powerup Label
+        powerUpLabel = new Label("None", new Label.LabelStyle(font, Color.WHITE));
+        Label powerUpTextLabel = new Label("Current powerup", new Label.LabelStyle(font, Color.WHITE));
 
         //remaining infiltrators
         infiltratorLabel = new Label(String.format("%d / 8 ", infiltratorsRemaining), new Label.LabelStyle(font, Color.WHITE));
@@ -86,6 +92,11 @@ public class Hud {
         table.add(attackLabel).expandX().padTop(10);
         table.row();
         table.add(hallucinateLabel).expandX().padTop(50);
+        table.row();
+        table.add(powerUpTextLabel).expandX().padTop(10);
+        table.row();
+        table.add(powerUpLabel).expandX().padTop(50);
+
 
         stage.addActor(table);
     }
