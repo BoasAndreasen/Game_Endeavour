@@ -86,18 +86,27 @@ public class TileWorld {
         }
         for (MapObject object:map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            rect.width=25;
+            rect.height=25;
             invispowerUp=rect;
+
         }
         for (MapObject object:map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            rect.width=25;
+            rect.height=25;
             speedpowerUp=rect;
         }
         for (MapObject object:map.getLayers().get(14).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            rect.width=25;
+            rect.height=25;
             slowpowerUp=rect;
         }
         for (MapObject object:map.getLayers().get(15).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
+            rect.width=25;
+            rect.height=25;
             reduceDamage=rect;
         }
     }

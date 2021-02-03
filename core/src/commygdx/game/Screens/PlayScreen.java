@@ -304,20 +304,17 @@ public class PlayScreen implements Screen {
                 hud.powerUpLabel.setText("Invisible");
                 System.out.println("Invis");
             }
-            if (player.powerUpCheck(tiles)=="Slow Infiltrators"){
-                System.out.println("Slow");
-                hud.powerUpLabel.setText("Slow");
+            if (player.powerUpCheck(tiles)=="Slow"){
+                hud.powerUpLabel.setText("Slow Infiltrators");
                 for (int x = 0; x< enemies.size(); x++){
                         enemies.get(x).setSpeed(4f);
                     }
             }
             if (player.powerUpCheck(tiles)=="Speed"){
-                System.out.println("Speed");
                 hud.powerUpLabel.setText("Speed");
                 player.movementSystem.setSpeed(9f);
             }
             if (player.powerUpCheck(tiles)=="Rdmg"){
-                System.out.println("R");
                 hud.powerUpLabel.setText("Reduce Damage");
                 player.damageAuber(enemies,hud,true);
 

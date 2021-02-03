@@ -85,24 +85,20 @@ public class Auber extends Character {
 
 
 
+
             if (sprite.getBoundingRectangle().contains(slowrect)) {
-                System.out.println("Sl");
                 return "Slow";
             }
             if (sprite.getBoundingRectangle().contains(speedrect)) {
-                System.out.println('S');
                 return "Speed";
             }
             if (sprite.getBoundingRectangle().contains(reducerect)) {
-                System.out.println('R');
                 return "Rdmg";
             }
             if (sprite.getBoundingRectangle().contains(healthrect)) {
-                System.out.println('H');
                 return "Health";
             }
             if (sprite.getBoundingRectangle().contains(invisrect)) {
-                System.out.println('I');
                 return "Invis";
             }
             else{
