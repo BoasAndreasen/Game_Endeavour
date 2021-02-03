@@ -53,7 +53,6 @@ public class PlayScreen implements Screen {
     private final boolean demo;
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
-    private boolean firstIteration = true;
 
     //Scene2D
     protected Auber player;
@@ -101,10 +100,10 @@ public class PlayScreen implements Screen {
         //sets up stage and actors
         setupShipStage();
 
-        if (loadFromSave && firstIteration) {
+        // Load tiles with or without saved systems
+        if (loadFromSave) {
             loadSystemSave();
             tiles = new TileWorld(this, systems);
-            firstIteration = false;
         }
         else {
             ArrayList<ShipSystem> emptyList = new ArrayList<ShipSystem>();
@@ -119,8 +118,8 @@ public class PlayScreen implements Screen {
         hallucinateTexture = new Texture("hallucinateV2.png");
         hallucinate = false;
 
-
-        hud = new Hud(enemies, tiles.getSystems());
+        //TODO save health
+        hud = new Hud(enemies, tiles.getSystems(), 95);
     }
 
     /**
@@ -160,14 +159,14 @@ public class PlayScreen implements Screen {
         if (!loadFromSave){
             //Creating and placing infiltrators
             enemies = new ArrayList<Infiltrator>(Arrays.asList(
-                    new Infiltrator(new Vector2(4700, 2000), 1, graph),
-                    new Infiltrator(new Vector2(4800, 2300), 2, graph),
-                    new Infiltrator(new Vector2(5000, 7356), 3, graph),
-                    new Infiltrator(new Vector2(4732, 7000), 4, graph),
-                    new Infiltrator(new Vector2(4732, 7500), 1, graph),
-                    new Infiltrator(new Vector2(4732, 7800), 1, graph),
-                    new Infiltrator(new Vector2(4200, 7800), 2, graph),
-                    new Infiltrator(new Vector2(5400, 7800), 2, graph)
+                    new Infiltrator(new Vector2(4700, 2000), 1, graph, false),
+                    new Infiltrator(new Vector2(4800, 2300), 2, graph, false),
+                    new Infiltrator(new Vector2(5000, 7356), 3, graph, false),
+                    new Infiltrator(new Vector2(4732, 7000), 4, graph, false),
+                    new Infiltrator(new Vector2(4732, 7500), 1, graph, false),
+                    new Infiltrator(new Vector2(4732, 7800), 1, graph, false),
+                    new Infiltrator(new Vector2(4200, 7800), 2, graph, false),
+                    new Infiltrator(new Vector2(5400, 7800), 2, graph, false)
             ));
         }
         else{
@@ -402,9 +401,11 @@ public class PlayScreen implements Screen {
                 JSONObject empObj = (JSONObject) e.get("sprite" + i);
                 double x = (double) empObj.get("x");
                 double y = (double) empObj.get("y");
+                boolean arrested = (boolean) empObj.get("arrested");
                 System.out.println("x: " + x);
                 System.out.println("y: " + y);
-                Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y), enemyPowerUpList[i - 1], graph);
+                Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y),
+                        enemyPowerUpList[i - 1], graph, arrested);
                 localEnemies.add(inf);
             }
         } catch (ParseException | IOException e) {
@@ -481,16 +482,42 @@ public class PlayScreen implements Screen {
      */
     private void saveGame() {
         // write sprite JSON
+        int counter = 0;
         JSONArray sprList = new JSONArray();
-        for (int i = 0; i < shipStage.getActors().size; i++) {
-            JSONObject spr = new JSONObject();
-            spr.put("x", shipStage.getActors().get(i).getX());
-            spr.put("y", shipStage.getActors().get(i).getY());
 
+        //Auber
+        JSONObject spr = new JSONObject();
+        spr.put("x", player.getX());
+        spr.put("y", player.getY());
 
-            JSONObject sprObj = new JSONObject();
-            sprObj.put("sprite" + i, spr);
+        JSONObject sprObj = new JSONObject();
+        sprObj.put("sprite" + counter, spr);
+        sprList.add(sprObj);
+        counter += 1;
+
+        //infiltrators
+        for (int i = 0; i < enemies.size(); i++) {
+            spr = new JSONObject();
+            spr.put("x", enemies.get(i).getX());
+            spr.put("y", enemies.get(i).getY());
+            spr.put("arrested", enemies.get(i).getIsArrested());
+
+            sprObj = new JSONObject();
+            sprObj.put("sprite" + counter, spr);
             sprList.add(sprObj);
+            counter += 1;
+        }
+
+        //NPCs
+        for (int i = 0; i < people.size(); i++) {
+            spr = new JSONObject();
+            spr.put("x", people.get(i).getX());
+            spr.put("y", people.get(i).getY());
+
+            sprObj = new JSONObject();
+            sprObj.put("sprite" + counter, spr);
+            sprList.add(sprObj);
+            counter += 1;
         }
 
         // write system JSON

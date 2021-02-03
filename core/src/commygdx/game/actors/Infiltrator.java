@@ -21,13 +21,14 @@ public class Infiltrator extends Character {
     private float destructionTimer = 0;
     private boolean facingRight;
 
-    public Infiltrator(Vector2 position, int power, PathGraph graph) {
+    public Infiltrator(Vector2 position, int power, PathGraph graph, boolean isArrested) {
         super(position);
         setPosition(position.x, position.y);
         this.power = power;
         powerOn = false;
         powerDuration = 0;
         powerCoolDown = 0;
+        this.isArrested = isArrested;
         ai = new InfiltratorAI(graph);
         facingRight = true;
     }
