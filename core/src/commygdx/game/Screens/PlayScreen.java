@@ -45,6 +45,7 @@ public class PlayScreen implements Screen {
     private final OrthogonalTiledMapRenderer renderer;
     public ArrayList<Infiltrator> enemies;
     public ArrayList<NPC> people;
+    public ArrayList<ShipSystem> systems;
     //Graph used for AI pathfinding
     public PathGraph graph;
     private boolean paused;
@@ -52,6 +53,7 @@ public class PlayScreen implements Screen {
     private final boolean demo;
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
+    private boolean firstIteration = true;
 
     //Scene2D
     protected Auber player;
@@ -79,7 +81,6 @@ public class PlayScreen implements Screen {
 
 
     public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave) {
-        //GitLab Test Comment
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
@@ -100,7 +101,15 @@ public class PlayScreen implements Screen {
         //sets up stage and actors
         setupShipStage();
 
-        tiles = new TileWorld(this);
+        if (loadFromSave && firstIteration) {
+            loadSystemSave();
+            tiles = new TileWorld(this, systems);
+            firstIteration = false;
+        }
+        else {
+            ArrayList<ShipSystem> emptyList = new ArrayList<ShipSystem>();
+            tiles = new TileWorld(this, emptyList);
+        }
 
         //Used for pause screen
         pauseTexture = new Texture("pauseImage.png");
@@ -110,7 +119,8 @@ public class PlayScreen implements Screen {
         hallucinateTexture = new Texture("hallucinateV2.png");
         hallucinate = false;
 
-        hud = new Hud(auberGame.batch, enemies, tiles.getSystems());
+
+        hud = new Hud(enemies, tiles.getSystems());
     }
 
     /**
@@ -353,7 +363,7 @@ public class PlayScreen implements Screen {
     private void loadAuberSave() {
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("save.json")) {
+        try(FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList1 = (JSONArray) obj;
@@ -373,11 +383,12 @@ public class PlayScreen implements Screen {
      * Load enemy from save
      */
     private void loadEnemySave() {
+        int [] enemyPowerUpList = {1,2,3,4,1,1,2,2};
         ArrayList<Infiltrator> localEnemies = new ArrayList<>();
 
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("save.json")) {
+        try(FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList = (JSONArray) obj;
@@ -390,7 +401,7 @@ public class PlayScreen implements Screen {
                 double y = (double) empObj.get("y");
                 System.out.println("x: " + x);
                 System.out.println("y: " + y);
-                Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y), 1, graph);
+                Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y), enemyPowerUpList[i - 1], graph);
                 localEnemies.add(inf);
             }
         } catch (ParseException | IOException e) {
@@ -409,7 +420,7 @@ public class PlayScreen implements Screen {
 
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("save.json")) {
+        try(FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList = (JSONArray) obj;
@@ -432,10 +443,41 @@ public class PlayScreen implements Screen {
     }
 
     /**
+     * Load system from save
+     */
+    private void loadSystemSave() {
+        ArrayList<ShipSystem> localSystems = new ArrayList<>();
+
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try(FileReader reader = new FileReader("saveSystem.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sysList = (JSONArray) obj;
+
+            for (int i = 0; i < sysList.size(); i++) {
+                JSONObject e = (JSONObject) sysList.get(i);
+                JSONObject empObj = (JSONObject) e.get("system" + i);
+                double x = (double) empObj.get("x");
+                double y = (double) empObj.get("y");
+                long state = (long) empObj.get("state");
+                String room = (String) empObj.get("room");
+                ShipSystem sys = new ShipSystem((float) x, (float) y, room, graph, (int) state);
+                localSystems.add(sys);
+            }
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+
+        //Creating and placing infiltrators
+        systems = new ArrayList<ShipSystem>(localSystems);
+    }
+
+    /**
      * Saves game in pause screen
      */
     private void saveGame() {
-        //Write JSON
+        // write sprite JSON
         JSONArray sprList = new JSONArray();
         for (int i = 0; i < shipStage.getActors().size; i++) {
             JSONObject spr = new JSONObject();
@@ -448,8 +490,31 @@ public class PlayScreen implements Screen {
             sprList.add(sprObj);
         }
 
-        try(FileWriter file = new FileWriter("save.json")) {
+        // write system JSON
+        JSONArray sysList = new JSONArray();
+        for (int i = 0; i < tiles.getSystems().size(); i++) {
+            JSONObject sys = new JSONObject();
+            sys.put("x", tiles.getSystems().get(i).getPosition().x);
+            sys.put("y", tiles.getSystems().get(i).getPosition().y);
+            sys.put("room", tiles.getSystems().get(i).getRoom());
+            sys.put("state", tiles.getSystems().get(i).getState());
+
+            JSONObject sysObj = new JSONObject();
+            sysObj.put("system" + i, sys);
+            sysList.add(sysObj);
+        }
+        // write sprite
+        try(FileWriter file = new FileWriter("saveSprite.json")) {
             file.write(sprList.toJSONString());
+            file.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write system
+        try(FileWriter file = new FileWriter("saveSystem.json")) {
+            file.write(sysList.toJSONString());
             file.flush();
         }
         catch (IOException e) {

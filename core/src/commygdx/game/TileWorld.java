@@ -32,17 +32,25 @@ public class TileWorld {
      *
      * @param screen the main game screen
      */
-    public TileWorld(PlayScreen screen) {
+    public TileWorld(PlayScreen screen, ArrayList<ShipSystem> newShipSystems) {
         TiledMap map = screen.getMap();
         this.scale = AuberGame.ZOOM;
+
         createRooms(map);
 
-        // create systems
-        shipSystems = new ArrayList<>();
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
-            shipSystems.add(new ShipSystem(rect.x, rect.y, getRoom(rect.x, rect.y), screen.graph));
+        if (!newShipSystems.isEmpty()) {
+            // read from save
+            this.shipSystems = newShipSystems;
+        } else {
+            // create systems
+            ArrayList<ShipSystem> shipSystems1 = new ArrayList<>();
+            for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
+                Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
+                shipSystems1.add(new ShipSystem(rect.x, rect.y, getRoom(rect.x, rect.y), screen.graph, 0));
+            }
+            this.shipSystems = shipSystems1;
         }
+
 
         //create objects
         collisionBoxes = new ArrayList<>();

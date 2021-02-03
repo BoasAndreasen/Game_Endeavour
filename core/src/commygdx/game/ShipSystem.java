@@ -10,11 +10,11 @@ public class ShipSystem {
     private final String room;
     private final PathGraph graph;
 
-    public ShipSystem(float x, float y, String room, PathGraph graph) {
+    public ShipSystem(float x, float y, String room, PathGraph graph, int state) {
         this.x = x;
         this.y = y;
         this.room = room;
-        this.state = 0;
+        this.state = state;
         this.graph = graph;
     }
 
@@ -46,6 +46,6 @@ public class ShipSystem {
 
     @Override
     public String toString() {
-        return getPosition().toString() + room;
+        return getPosition().toString() + room + state;
     }
 }
