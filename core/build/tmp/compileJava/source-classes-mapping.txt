@@ -38,8 +38,6 @@ commygdx/game/stages/Hud.java
  commygdx.game.stages.Hud
 commygdx/game/Screens/TeleportMenu.java
  commygdx.game.Screens.TeleportMenu
-commygdx/game/AuberGame.java
- commygdx.game.AuberGame
 commygdx/game/Screens/PlayScreen.java
  commygdx.game.Screens.PlayScreen
 commygdx/game/actors/DemoAuber.java
@@ -52,3 +50,5 @@ commygdx/game/actors/Auber.java
  commygdx.game.actors.Auber
 commygdx/game/actors/Infiltrator.java
  commygdx.game.actors.Infiltrator
+commygdx/game/AuberGame.java
+ commygdx.game.AuberGame

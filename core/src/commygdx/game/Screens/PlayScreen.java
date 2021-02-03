@@ -54,6 +54,8 @@ public class PlayScreen implements Screen {
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
 
+    private int delay;
+
     //Scene2D
     protected Auber player;
     private Stage shipStage;
@@ -64,16 +66,6 @@ public class PlayScreen implements Screen {
     private final Texture pauseTexture2;
     private final Texture hallucinateTexture;
 
-    private Texture health;
-    private Texture invis;
-    private Texture slow;
-    private Texture speed;
-    private Texture rdmg;
-    private Image h;
-    private Image i;
-    private Image sl;
-    private Image sp;
-    private Image r;
 
     private final TileWorld tiles;
     protected int scale;
@@ -84,6 +76,7 @@ public class PlayScreen implements Screen {
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
         this.loadFromSave = loadFromSave;
+        delay=0;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
         /*Possible fullscreen
@@ -213,15 +206,12 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         if (!paused) {
             //updates game
+            delay+=1;
             checkGameState();
             update(delta);
             updateInfiltrators(delta);
             teleportCheck();
-            try {
-                powerupCheck();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            powerupCheck();
             player.checkCollision(tiles.getCollisionBoxes());
             healAuber();
         }
@@ -288,7 +278,7 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void powerupCheck() throws InterruptedException {
+    private void powerupCheck()  {
         if (demo) {
             return;
         }
@@ -296,17 +286,15 @@ public class PlayScreen implements Screen {
             if (player.powerUpCheck(tiles)=="Health"){
                 hud.healthPower();
                 hud.powerUpLabel.setText("Health");
-                System.out.println("Health");
             }
             if (player.powerUpCheck(tiles)=="Invis"){
-                player.goInvisible();
+                player.goInvisible(true);
                 hud.powerUpLabel.setText("Invisible");
-                System.out.println("Invis");
             }
             if (player.powerUpCheck(tiles)=="Slow"){
                 hud.powerUpLabel.setText("Slow Infiltrators");
                 for (int x = 0; x< enemies.size(); x++){
-                        enemies.get(x).setSpeed(4f);
+                        enemies.get(x).setSpeed(2f);
                     }
             }
             if (player.powerUpCheck(tiles)=="Speed"){
@@ -319,14 +307,14 @@ public class PlayScreen implements Screen {
 
             }
         }
-        else{
+        if (delay>500) {
             hud.powerUpLabel.setText("None");
-            player.sprite.setTexture(new Texture(Gdx.files.internal("Characters/auberSprite.png")));
+            player.movementSystem.setSpeed(6f);
             for (int x = 0; x< enemies.size(); x++){
                 enemies.get(x).setSpeed(6f);
             }
-            player.movementSystem.setSpeed(6f);
-
+            player.goInvisible(false);
+            delay=0;
         }
     }
 

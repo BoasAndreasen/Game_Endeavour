@@ -11,9 +11,12 @@ import commygdx.game.stages.Hud;
 import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Auber extends Character {
     protected boolean facingRight;
+
 
     public Auber(Vector2 position) {
         super(position);
@@ -21,6 +24,7 @@ public class Auber extends Character {
         movementSystem.setSpeed(6f);
         facingRight = true;
     }
+
 
     @Override
     protected Texture getTexture() {
@@ -129,6 +133,7 @@ public class Auber extends Character {
         }
     }
 
+
     /**
      * Damage auber if infiltrators are in range
      *
@@ -146,12 +151,18 @@ public class Auber extends Character {
         }
     }
 
-    public void goInvisible()  {
-        sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
-
+    public void goInvisible(boolean power)  {
+        if (power==true) {
+            sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
+        }
+        else{
+            sprite.setTexture(getTexture());
+        }
 
 
     }
+
+
 
     //moves the camera to the auber when game starts
     public void shuffle() {
