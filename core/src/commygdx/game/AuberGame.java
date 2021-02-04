@@ -2,6 +2,7 @@ package commygdx.game;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import commygdx.game.Screens.DifficultyScreen;
 import commygdx.game.Screens.GameOverScreen;
 import commygdx.game.Screens.IntroScreen;
 import commygdx.game.Screens.PlayScreen;
@@ -12,7 +13,8 @@ public class AuberGame extends com.badlogic.gdx.Game {
     public static final int V_HEIGHT = 1440;
     public static final int ZOOM = 12;
     public String onTeleport;
-    public Screen screen;
+    public Screen playscreen;
+    public Screen diffscreen;
     //game state -1= intro screen 0=exit introscreen 1=playing 2=win 3=lost
     public int gameState;
     private GameOverScreen gameOverScreen;
@@ -33,8 +35,12 @@ public class AuberGame extends com.badlogic.gdx.Game {
      * @param demo If the screen should be in demo mode or not
      * @param loadGame if data should be loaded from previous save
      */
-    public void createPlayScreen(boolean demo, boolean loadGame) {
-        screen = new PlayScreen(this, demo, loadGame);
+    public void createPlayScreen(boolean demo, boolean loadGame,String difficulty) {
+        playscreen = new PlayScreen(this, demo, loadGame,difficulty);
+    }
+
+    public void createDifficultyScreen(boolean demo,boolean loadGame){
+        diffscreen=new DifficultyScreen(this,demo,loadGame);
     }
 
     @Override
@@ -42,7 +48,7 @@ public class AuberGame extends com.badlogic.gdx.Game {
         super.render();
         //exit intro screen and start game
         if (gameState == 0 || gameState == 4) {
-            setScreen(screen);
+            setScreen(playscreen);
             gameState = 1;
         }
 
@@ -54,6 +60,11 @@ public class AuberGame extends com.badlogic.gdx.Game {
         if (onTeleport != "true" && onTeleport != "false") {
             //exit teleport screen
             setScreen(screen);
+        }
+
+        if (gameState==5){
+            setScreen(diffscreen);
+            gameState=1;
         }
 
 

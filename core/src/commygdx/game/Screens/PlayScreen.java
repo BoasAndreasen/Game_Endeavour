@@ -37,6 +37,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class PlayScreen implements Screen {
+    private final String difficulty;
     protected AuberGame auberGame;
     private final Hud hud;
     private final OrthographicCamera gamecam;
@@ -71,11 +72,12 @@ public class PlayScreen implements Screen {
     protected int scale;
 
 
-    public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave) {
+    public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave,String difficulty) {
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
         this.loadFromSave = loadFromSave;
+        this.difficulty=difficulty;
         delay=0;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
@@ -215,6 +217,26 @@ public class PlayScreen implements Screen {
             player.checkCollision(tiles.getCollisionBoxes());
             healAuber();
         }
+
+        if (difficulty == "easy") {
+            player.movementSystem.setSpeed(6f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(3f);
+            }
+        }
+        if (difficulty == "normal") {
+            player.movementSystem.setSpeed(6f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(6f);
+            }
+        }
+        if (difficulty == "hard") {
+            player.movementSystem.setSpeed(10f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(15f);
+            }
+        }
+
 
         //draws game
         Gdx.gl.glClearColor(0, 0, 0, 0);

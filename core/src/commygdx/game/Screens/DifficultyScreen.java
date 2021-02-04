@@ -8,16 +8,23 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import commygdx.game.AuberGame;
 
-public class IntroScreen implements Screen {
-    private final Texture introTexture;
-    private final AuberGame game;
 
-    public IntroScreen(AuberGame game) {
+public class DifficultyScreen implements Screen {
+
+    private final Texture difftexture;
+    private final AuberGame game;
+    private final boolean demo;
+    private final boolean loadFromSave;
+
+    public DifficultyScreen(AuberGame game,boolean demo, boolean loadFromSave){
         this.game = game;
-        introTexture = new Texture("IntroV3.png");
+        this.demo=demo; 
+        this.loadFromSave=loadFromSave; 
+        difftexture = new Texture("diffsc.png");
         OrthographicCamera gamecam = new OrthographicCamera();
         gamecam.setToOrtho(true, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
     }
+
 
     @Override
     public void show() {
@@ -31,24 +38,25 @@ public class IntroScreen implements Screen {
 
         //draw buttons
         game.batch.begin();
-        game.batch.draw(introTexture, 40, 40, introTexture.getWidth() * 2, introTexture.getHeight() * 2);
+        game.batch.draw(difftexture, 40, 40, difftexture.getWidth() * 2, difftexture.getHeight() * 2);
         game.batch.end();
 
         //player enters either playing mode or demo mode
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            game.createDifficultyScreen(false,false);
-            game.gameState=5;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            game.createDifficultyScreen(false,true);
-            game.gameState=5;
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            game.createPlayScreen(true, false,"easy");
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            game.createPlayScreen(this.demo,this.loadFromSave,"easy");
             game.gameState = 0;
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.B)) {
+            game.createPlayScreen(this.demo, this.loadFromSave,"normal");
+            game.gameState = 0;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.C)) {
+            game.createPlayScreen(false, false,"hard");
+            game.gameState = 0;
+        }
+
     }
 
     @Override
