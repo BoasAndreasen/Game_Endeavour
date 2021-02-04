@@ -2,10 +2,10 @@ commygdx/game/ShipSystem.java
  commygdx.game.ShipSystem
 test/java/commygdx/game/InfiltratorTest.java
  test.java.commygdx.game.InfiltratorTest
-commygdx/game/AI/graph/queue/PriorityItem.java
- commygdx.game.AI.graph.queue.PriorityItem
 commygdx/game/actors/DemoAuber.java
  commygdx.game.actors.DemoAuber
+commygdx/game/AI/graph/queue/PriorityItem.java
+ commygdx.game.AI.graph.queue.PriorityItem
 commygdx/game/TileWorld.java
  commygdx.game.TileWorld
 commygdx/game/AI/DemoAI.java
