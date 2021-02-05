@@ -152,6 +152,9 @@ class AuberTest {
          *              Auber.arrest() -> Hud.infiltratorCaught();
          *
          * This test should test if infiltrators are arrested when SPACE key is pressed
+         *
+         * Possible Solution:
+         * Mock PlayInput.arrest() and test Hud.infiltratorsRemaining
          */
     }
 
@@ -164,6 +167,12 @@ class AuberTest {
      * Test_Case_5.4: Test when system remaining = 0
      */
     void testGameover(){
+        /**
+         * Progress:Auber.arrest() -> PlayerInput.arrest()
+         *              Auber.arrest() -> Infiltrator.arrest
+         *              Auber.arrest() -> Hud.infiltratorCaught();
+         *
+         */
         //playScreen.checkGameState(4,0,100);
         //assertEquals(3, auberGame.getGameState());
         //playScreen.checkGameState(4,5,0);
@@ -182,18 +191,18 @@ class AuberTest {
     @Test
     @DisplayName("Test_7: Test if system can be destroy by the Infiltrator")
     /**
-     * Test_Case_6.1: Test when Infiltrator >= 1
-     * Test_Case_6.2: Test when Infiltrator = 0
+     * Test_Case_7.1: Test if system being sabotage when infiltrator near
+     * Test_Case_7.2: Test if system being sabotage when infiltrator not near
      */
     void testSabotage(){
 
     }
 
     @Test
-    @DisplayName("Test_A8: Test if Auber can be damaged by the Infiltrator")
+    @DisplayName("Test_8: Test if Auber can be damaged by the Infiltrator")
     /**
-     * Test_Case_6.1: Test when Infiltrator >= 1
-     * Test_Case_6.2: Test when Infiltrator = 0
+     * Test_Case_8.1: Test if Auber is being damaged when near Infiltrator
+     * Test_Case_8.2: Test if Auber is being damaged when not near Infiltrator
      */
     void testDamage(){
 
