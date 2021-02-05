@@ -56,6 +56,7 @@ public class PlayScreen implements Screen {
     private final boolean loadFromSave;
 
     private int delay;
+    private String teleport;
 
     //Scene2D
     protected Auber player;
@@ -192,6 +193,7 @@ public class PlayScreen implements Screen {
         shipStage.act(dt);
         player.damageAuber(enemies, hud,false);
         player.arrest(enemies, hud);
+        diffCheck();
     }
 
     @Override
@@ -212,30 +214,13 @@ public class PlayScreen implements Screen {
             checkGameState();
             update(delta);
             updateInfiltrators(delta);
-            teleportCheck();
+            teleportCheck(teleport);
             powerupCheck();
             player.checkCollision(tiles.getCollisionBoxes());
             healAuber();
         }
 
-        if (difficulty == "easy") {
-            player.movementSystem.setSpeed(6f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(3f);
-            }
-        }
-        if (difficulty == "normal") {
-            player.movementSystem.setSpeed(6f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(6f);
-            }
-        }
-        if (difficulty == "hard") {
-            player.movementSystem.setSpeed(10f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(15f);
-            }
-        }
+
 
 
         //draws game
@@ -284,7 +269,29 @@ public class PlayScreen implements Screen {
         auberGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
     }
 
-    private void teleportCheck() {
+    private void diffCheck(){
+        if (difficulty == "easy") {
+            player.movementSystem.setSpeed(6f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(3f);
+            }
+        }
+        if (difficulty == "normal") {
+            player.movementSystem.setSpeed(6f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(6f);
+            }
+        }
+        if (difficulty == "hard") {
+            player.movementSystem.setSpeed(6f);
+            for (int x=0;x<enemies.size();x++){
+                enemies.get(x).movementSystem.setSpeed(10f);
+            }
+        }
+
+    }
+
+    private void teleportCheck(String teleport) {
         //teleport is disabled in demo mode, because the ai can't handle it
         if (demo) {
             return;
@@ -293,8 +300,7 @@ public class PlayScreen implements Screen {
         if (player.teleportCheck(tiles) && auberGame.onTeleport.equals("false")) {
             auberGame.setScreen(new TeleportMenu(auberGame));
         }
-        //teleport auber
-        if (!auberGame.onTeleport.equals("true") && !auberGame.onTeleport.equals("false")) {
+        if ((auberGame.onTeleport!="true") && (auberGame.onTeleport!="false")) {
             teleportAuber();
             auberGame.onTeleport = "false";
         }

@@ -43,18 +43,21 @@ public class DifficultyScreen implements Screen {
 
         //player enters either playing mode or demo mode
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            game.createPlayScreen(this.demo,this.loadFromSave,"easy");
             game.gameState = 0;
+            game.createPlayScreen(this.demo,this.loadFromSave,"easy");
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.B)) {
-            game.createPlayScreen(this.demo, this.loadFromSave,"normal");
             game.gameState = 0;
+            game.createPlayScreen(this.demo, this.loadFromSave,"normal");
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.C)) {
-            game.createPlayScreen(false, false,"hard");
             game.gameState = 0;
+            game.createPlayScreen(false, false,"hard");
+
         }
 
     }

@@ -73,6 +73,7 @@ public class Auber extends Character {
         //check if standing on teleporter
         for (Rectangle rect : tiles.getTeleporters().values()) {
             if (sprite.getBoundingRectangle().contains(rect)) {
+
                 return true;
             }
         }

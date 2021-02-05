@@ -57,15 +57,16 @@ public class AuberGame extends com.badlogic.gdx.Game {
             setScreen(gameOverScreen);
         }
 
-        if (onTeleport != "true" && onTeleport != "false") {
-            //exit teleport screen
-            setScreen(screen);
-        }
-
         if (gameState==5){
             setScreen(diffscreen);
-            gameState=1;
         }
+
+        if ((onTeleport != "true") && (onTeleport != "false")) {
+            //exit teleport screen
+            setScreen(playscreen);
+        }
+
+
 
 
 
