@@ -283,9 +283,9 @@ public class PlayScreen implements Screen {
             }
         }
         if (difficulty == "hard") {
-            player.movementSystem.setSpeed(6f);
+            player.movementSystem.setSpeed(12f);
             for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(10f);
+                enemies.get(x).movementSystem.setSpeed(12f);
             }
         }
 
