@@ -1,6 +1,6 @@
 test/java/commygdx/game/InfiltratorTest.java
  test.java.commygdx.game.InfiltratorTest
-test/java/commygdx/game/AuberTest.java
- test.java.commygdx.game.AuberTest
 test/java/commygdx/game/NPCTest.java
  test.java.commygdx.game.NPCTest
+test/java/commygdx/game/AuberTest.java
+ test.java.commygdx.game.AuberTest

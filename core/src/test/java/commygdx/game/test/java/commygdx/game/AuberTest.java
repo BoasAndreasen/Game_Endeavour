@@ -19,10 +19,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.Assert.*;
+
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -177,17 +183,17 @@ class AuberTest {
          * Mock PlayerInput.arrest() and test Hud.infiltratorsRemaining
          */
 
-        /**
-        * hudMock.infiltratorsRemaining = 1;
-        * ArrayList<Infiltrator> i;
-        * i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1, playScreenMock.graph, false)));
-        * auberMock.setPosition(550, 220);
-        *
-        * when(playerInputMock.arrest()).thenReturn(true); //Player press SPACE
-        * auberMock.arrest(i, hudMock);
-        * assertEquals(0, hudMock.infiltratorsRemaining);
-        */
+
+         hudMock.infiltratorsRemaining = 1;
+         ArrayList<Infiltrator> i;
+         i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1, playScreenMock.graph, false)));
+         auberMock.setPosition(550, 220);
+         when(playerInputMock.arrest()).thenReturn(true); //Player press SPACE
+         auberMock.arrest(i, hudMock);
+         assertEquals(0, hudMock.infiltratorsRemaining);
+
     }
+
 
     @Test
     @DisplayName("Test_5: Test if the player can lose the game when no system remaining or Auber's health is 0")
