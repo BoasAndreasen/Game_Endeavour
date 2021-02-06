@@ -24,7 +24,7 @@ public class Hud {
     private int auberHealth;
     private final Label systemLabel;
     private final Label auberLabel;
-    private int infiltratorsRemaining;
+    public int infiltratorsRemaining;
     private final Label infiltratorLabel;
     private final Label attackLabel;
     private final Label hallucinateLabel;

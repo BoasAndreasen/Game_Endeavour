@@ -3,6 +3,7 @@ package test.java.commygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 
 import commygdx.game.AuberGame;
 import commygdx.game.Screens.PlayScreen;
@@ -17,23 +18,31 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.mockito.Mockito.*;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.configuration.IMockitoConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 
-
+@ExtendWith(MockitoExtension.class)
 class AuberTest {
 
-    PlayerInput playerInput;
-    PlayScreen playScreen;
-    AuberGame auberGame;
-    Auber auber;
-    TeleportMenu teleportMenu;
+    @Mock
+    PlayerInput playerInputMock;
+    PlayScreen playScreenMock;
+    AuberGame auberGameMock;
+    Auber auberMock;
+    TeleportMenu teleportMenuMock;
+    Hud hudMock;
+
 
     @BeforeEach
     /**
@@ -44,7 +53,7 @@ class AuberTest {
      * Black Box testing could be possible but the whole structure will need to be refactor
      */
     void setUp() {
-        //playScreen = new PlayScreen(auberGame, false, false, "easy");
+        MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
@@ -132,11 +141,29 @@ class AuberTest {
          *
          * This test should test if auber is moving when Keys are pressed
          * handleMovement will set the Auber's position with setPosition which no value can be use for testing
-         * handleMovement is override from Character.java which makes it very difficult to refactor
+         * handleMovement is a protect class and it is override from Character.java which makes it very difficult to refactor
          *
          * Possible Solution:
          * Mock getDirection() and test Auber's position X and Y
          */
+
+        /**
+         * float x = 900; //Setup X
+         * float y = 500; //Setup Y
+         * auberMock.setPosition(x, y); //Random position
+         * assertEquals(900, auberMock.getX());
+         * assertEquals(500, auberMock.getY());
+         *
+         * when(playerInputMock.getDirection()).thenReturn(1); //Setting Input as going UP
+         * auberMock.handleMovement(); //code not working from here handleMovement is protected don't know what to do with it
+         * assertTrue(auberMock.getY() > 900);
+         *
+         * when(playerInputMock.getDirection()).thenReturn(2); //Setting Input as going RIGHT
+         * auberMock.handleMovement(); //code not working from here handleMovement is protected don't know what to do with it
+         * assertTrue(auberMock.getX() > 500);
+         */
+
+
     }
 
     @Test
@@ -154,8 +181,19 @@ class AuberTest {
          * This test should test if infiltrators are arrested when SPACE key is pressed
          *
          * Possible Solution:
-         * Mock PlayInput.arrest() and test Hud.infiltratorsRemaining
+         * Mock PlayerInput.arrest() and test Hud.infiltratorsRemaining
          */
+
+        /**
+        * hudMock.infiltratorsRemaining = 1;
+        * ArrayList<Infiltrator> i;
+        * i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1, playScreenMock.graph, false)));
+        * auberMock.setPosition(550, 220);
+        *
+        * when(playerInputMock.arrest()).thenReturn(true); //Player press SPACE
+        * auberMock.arrest(i, hudMock);
+        * assertEquals(0, hudMock.infiltratorsRemaining);
+        */
     }
 
     @Test
@@ -167,12 +205,6 @@ class AuberTest {
      * Test_Case_5.4: Test when system remaining = 0
      */
     void testGameover(){
-        /**
-         * Progress:Auber.arrest() -> PlayerInput.arrest()
-         *              Auber.arrest() -> Infiltrator.arrest
-         *              Auber.arrest() -> Hud.infiltratorCaught();
-         *
-         */
         //playScreen.checkGameState(4,0,100);
         //assertEquals(3, auberGame.getGameState());
         //playScreen.checkGameState(4,5,0);
