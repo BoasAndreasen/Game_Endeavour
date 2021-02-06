@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import commygdx.game.AI.graph.queue.PriorityItem;
 import commygdx.game.AI.graph.queue.PriorityQueue;
 import commygdx.game.Utility;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 

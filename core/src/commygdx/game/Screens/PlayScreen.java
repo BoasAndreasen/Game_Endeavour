@@ -13,33 +13,37 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import commygdx.game.AI.graph.PathGraph;
 import commygdx.game.AI.graph.PathNode;
 import commygdx.game.AuberGame;
 import commygdx.game.ShipSystem;
 import commygdx.game.TileWorld;
 import commygdx.game.Utility;
+import commygdx.game.actors.Auber;
 import commygdx.game.actors.DemoAuber;
 import commygdx.game.actors.Infiltrator;
 import commygdx.game.actors.NPC;
-import java.io.BufferedReader;
-import java.io.IOException;
 import commygdx.game.stages.Hud;
-import commygdx.game.actors.Auber;
-
-import java.io.*;
-import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class PlayScreen implements Screen {
     private final String difficulty;
     protected AuberGame auberGame;
-    private final Hud hud;
+    private Hud hud;
     private final OrthographicCamera gamecam;
     private final Viewport gamePort;
     private final TiledMap map;
@@ -52,11 +56,10 @@ public class PlayScreen implements Screen {
     private boolean paused;
     private boolean saved;
     private final boolean demo;
+    // Duration of power-up
+    private int duration;
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
-
-    private int delay;
-    private String teleport;
 
     //Scene2D
     protected Auber player;
@@ -68,23 +71,21 @@ public class PlayScreen implements Screen {
     private final Texture pauseTexture2;
     private final Texture hallucinateTexture;
 
-
     private final TileWorld tiles;
     protected int scale;
 
 
-    public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave,String difficulty) {
+    public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave, String difficulty) {
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
         this.loadFromSave = loadFromSave;
-        this.difficulty=difficulty;
-        delay=0;
+        this.difficulty = difficulty;
+        this.duration = 0;
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
         /*Possible fullscreen
         Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());*/
-
 
         //load map
         TmxMapLoader mapLoader = new TmxMapLoader();
@@ -100,8 +101,7 @@ public class PlayScreen implements Screen {
         if (loadFromSave) {
             loadSystemSave();
             tiles = new TileWorld(this, systems);
-        }
-        else {
+        } else {
             ArrayList<ShipSystem> emptyList = new ArrayList<ShipSystem>();
             tiles = new TileWorld(this, emptyList);
         }
@@ -114,8 +114,11 @@ public class PlayScreen implements Screen {
         hallucinateTexture = new Texture("hallucinateV2.png");
         hallucinate = false;
 
-        //TODO save health
-        hud = new Hud(enemies, tiles.getSystems(), 95);
+        if (!loadFromSave) {
+            hud = new Hud(enemies, tiles.getSystems(), 100);
+        } else {
+            loadHudSave();
+        }
     }
 
     /**
@@ -140,10 +143,9 @@ public class PlayScreen implements Screen {
     private void createAuber() {
         //A different version of Auber is used for the player depending on if it's a demo or not
         if (!demo) {
-            if (!loadFromSave){
+            if (!loadFromSave) {
                 player = new Auber(new Vector2(450 * scale, 778 * scale));
-            }
-            else{
+            } else {
                 loadAuberSave();
             }
         } else {
@@ -151,27 +153,34 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void createEnemies(){
-        if (!loadFromSave){
+    private void createEnemies() {
+        if (!loadFromSave) {
             //Creating and placing infiltrators
             enemies = new ArrayList<Infiltrator>(Arrays.asList(
-                    new Infiltrator(new Vector2(4700, 2000), 1, graph, false),
-                    new Infiltrator(new Vector2(4800, 2300), 2, graph, false),
-                    new Infiltrator(new Vector2(5000, 7356), 3, graph, false),
-                    new Infiltrator(new Vector2(4732, 7000), 4, graph, false),
-                    new Infiltrator(new Vector2(4732, 7500), 1, graph, false),
-                    new Infiltrator(new Vector2(4732, 7800), 1, graph, false),
-                    new Infiltrator(new Vector2(4200, 7800), 2, graph, false),
-                    new Infiltrator(new Vector2(5400, 7800), 2, graph, false)
+                    new Infiltrator(new Vector2(4700, 2000), 1, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(4800, 2300), 2, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(5000, 7356), 3, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(4732, 7000), 4, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(4732, 7500), 1, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(4732, 7800), 2, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(4200, 7800), 3, graph, false,
+                            0, 0),
+                    new Infiltrator(new Vector2(5400, 7800), 4, graph, false,
+                            0, 0)
             ));
-        }
-        else{
+        } else {
             loadEnemySave();
         }
     }
 
     private void createNPCs() {
-        if (!loadFromSave){
+        if (!loadFromSave) {
             //Creating and placing infiltrators
             people = new ArrayList<NPC>(Arrays.asList(
                     new NPC(new Vector2(4700, 2000), graph),
@@ -183,17 +192,21 @@ public class PlayScreen implements Screen {
                     new NPC(new Vector2(4200, 7800), graph),
                     new NPC(new Vector2(5400, 7800), graph)
             ));
-        }
-        else{
+        } else {
             loadNPCSave();
         }
     }
 
     public void update(float dt) {
+        if (!player.powerUpCheck(tiles).equals("null")) {
+            duration = 500;
+        } else if (duration > 0) {
+            duration -= 1;
+        }
+
         shipStage.act(dt);
-        player.damageAuber(enemies, hud,false);
+        player.damageAuber(enemies, hud, false);
         player.arrest(enemies, hud);
-        diffCheck();
     }
 
     @Override
@@ -210,18 +223,15 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         if (!paused) {
             //updates game
-            delay+=1;
             checkGameState();
             update(delta);
             updateInfiltrators(delta);
-            teleportCheck(teleport);
+            teleportCheck();
             powerupCheck();
             player.checkCollision(tiles.getCollisionBoxes());
+            hud.updateAttacks(tiles.getSystems());
             healAuber();
         }
-
-
-
 
         //draws game
         Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -229,27 +239,33 @@ public class PlayScreen implements Screen {
         renderer.render();
         shipStage.draw();
         updateCamera();
+
         if (hallucinate) {
             drawHallucinate();
         }
+
         if (paused) {
             drawPause();
-        }
-        else {
-            hud.updateAttacks(tiles.getSystems());
+        } else {
             hud.stage.draw();
         }
 
+        // pause game
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             paused = true;
         }
+
+        // unpause game
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             paused = false;
             saved = false;
         }
+
+        // quit game
         if (Gdx.input.isKeyPressed(Input.Keys.BACKSPACE) && paused) {
             Gdx.app.exit();
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && paused) {
             // Only allow game to be saved once per pause
             if (!saved) {
@@ -259,9 +275,12 @@ public class PlayScreen implements Screen {
         }
     }
 
+    /**
+     * sets camera to players position
+     */
     private void updateCamera() {
-        //sets camera to players position
-        Vector3 pos = new Vector3((player.getX()) + player.getWidth() / 2, (player.getY()) + player.getHeight() / 2, 0);
+        Vector3 pos = new Vector3((player.getX()) + player.getWidth() / 2,
+                (player.getY()) + player.getHeight() / 2, 0);
         shipStage.getViewport().getCamera().position.set(pos);
         gamecam.position.set(pos);
         gamecam.update();
@@ -269,29 +288,31 @@ public class PlayScreen implements Screen {
         auberGame.batch.setProjectionMatrix(hud.stage.getCamera().combined);
     }
 
-    private void diffCheck(){
-        if (difficulty == "easy") {
+    /**
+     * sets enemy's speed depending on difficulty
+     */
+    private void diffCheck() {
+        if (difficulty.equals("easy")) {
             player.movementSystem.setSpeed(6f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(3f);
+            for (Infiltrator enemy : enemies) {
+                enemy.movementSystem.setSpeed(3f);
             }
         }
-        if (difficulty == "normal") {
+        if (difficulty.equals("normal")) {
             player.movementSystem.setSpeed(6f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(6f);
+            for (Infiltrator enemy : enemies) {
+                enemy.movementSystem.setSpeed(6f);
             }
         }
-        if (difficulty == "hard") {
-            player.movementSystem.setSpeed(12f);
-            for (int x=0;x<enemies.size();x++){
-                enemies.get(x).movementSystem.setSpeed(12f);
+        if (difficulty.equals("hard")) {
+            player.movementSystem.setSpeed(4f);
+            for (Infiltrator enemy : enemies) {
+                enemy.movementSystem.setSpeed(10f);
             }
         }
-
     }
 
-    private void teleportCheck(String teleport) {
+    private void teleportCheck() {
         //teleport is disabled in demo mode, because the ai can't handle it
         if (demo) {
             return;
@@ -300,49 +321,46 @@ public class PlayScreen implements Screen {
         if (player.teleportCheck(tiles) && auberGame.onTeleport.equals("false")) {
             auberGame.setScreen(new TeleportMenu(auberGame));
         }
-        if ((auberGame.onTeleport!="true") && (auberGame.onTeleport!="false")) {
+        if ((!auberGame.onTeleport.equals("true")) && (!auberGame.onTeleport.equals("false"))) {
             teleportAuber();
             auberGame.onTeleport = "false";
         }
     }
 
-    private void powerupCheck()  {
+    /**
+     * Sets power-up back or calls default
+     */
+    private void powerupCheck() {
         if (demo) {
             return;
         }
-        if (player.powerUpCheck(tiles)!= "null"){
-            if (player.powerUpCheck(tiles)=="Health"){
+        if (duration > 0) {
+            if (player.powerUpCheck(tiles).equals("Health")) {
                 hud.healthPower();
                 hud.powerUpLabel.setText("Health");
             }
-            if (player.powerUpCheck(tiles)=="Invis"){
+            if (player.powerUpCheck(tiles).equals("Invis")) {
                 player.goInvisible(true);
                 hud.powerUpLabel.setText("Invisible");
             }
-            if (player.powerUpCheck(tiles)=="Slow"){
+            if (player.powerUpCheck(tiles).equals("Slow")) {
                 hud.powerUpLabel.setText("Slow Infiltrators");
-                for (int x = 0; x< enemies.size(); x++){
-                        enemies.get(x).setSpeed(2f);
-                    }
+                for (Infiltrator enemy : enemies) {
+                    enemy.setSpeed(2f);
+                }
             }
-            if (player.powerUpCheck(tiles)=="Speed"){
+            if (player.powerUpCheck(tiles).equals("Speed")) {
                 hud.powerUpLabel.setText("Speed");
                 player.movementSystem.setSpeed(9f);
             }
-            if (player.powerUpCheck(tiles)=="Rdmg"){
+            if (player.powerUpCheck(tiles).equals("Rdmg")) {
                 hud.powerUpLabel.setText("Reduce Damage");
-                player.damageAuber(enemies,hud,true);
-
+                player.damageAuber(enemies, hud, true);
             }
-        }
-        if (delay>500) {
+        } else {
             hud.powerUpLabel.setText("None");
-            player.movementSystem.setSpeed(6f);
-            for (int x = 0; x< enemies.size(); x++){
-                enemies.get(x).setSpeed(6f);
-            }
             player.goInvisible(false);
-            delay=0;
+            diffCheck();
         }
     }
 
@@ -354,8 +372,7 @@ public class PlayScreen implements Screen {
         if (player.sprite.getBoundingRectangle().overlaps(tiles.getInfirmary())) {
             hud.showHallucinateLabel(false);
             hallucinate = false;
-        }
-        else {
+        } else {
             auberGame.batch.draw(hallucinateTexture, 0, 0);
         }
         auberGame.batch.end();
@@ -368,11 +385,31 @@ public class PlayScreen implements Screen {
         auberGame.batch.begin();
         if (!saved) {
             auberGame.batch.draw(pauseTexture, (Gdx.graphics.getWidth()) / 2.0f, (Gdx.graphics.getHeight()) / 2.5f);
-        }
-        else {
+        } else {
             auberGame.batch.draw(pauseTexture2, (Gdx.graphics.getWidth()) / 2.0f, (Gdx.graphics.getHeight()) / 2.5f);
         }
         auberGame.batch.end();
+    }
+
+    /**
+     * Load Hud from save
+     */
+    private void loadHudSave() {
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try (FileReader reader = new FileReader("saveSprite.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sprList1 = (JSONArray) obj;
+            JSONObject empObj = (JSONObject) sprList1.get(0);
+
+            JSONObject j = (JSONObject) empObj.get("sprite0");
+            int health = Integer.parseInt(String.valueOf(j.get("health")));
+            hud = new Hud(enemies, tiles.getSystems(), health);
+
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -381,14 +418,13 @@ public class PlayScreen implements Screen {
     private void loadAuberSave() {
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("saveSprite.json")) {
+        try (FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList1 = (JSONArray) obj;
             JSONObject empObj = (JSONObject) sprList1.get(0);
-            System.out.println(empObj);
-            JSONObject j = (JSONObject) empObj.get("sprite0");
 
+            JSONObject j = (JSONObject) empObj.get("sprite0");
             double x = (double) j.get("x");
             double y = (double) j.get("y");
             player = new Auber(new Vector2((float) x, (float) y));
@@ -401,27 +437,26 @@ public class PlayScreen implements Screen {
      * Load enemy from save
      */
     private void loadEnemySave() {
-        int [] enemyPowerUpList = {1,2,3,4,1,1,2,2};
         ArrayList<Infiltrator> localEnemies = new ArrayList<>();
 
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("saveSprite.json")) {
+        try (FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList = (JSONArray) obj;
 
             for (int i = 1; i < 9; i++) {
-                System.out.println(i);
                 JSONObject e = (JSONObject) sprList.get(i);
                 JSONObject empObj = (JSONObject) e.get("sprite" + i);
                 double x = (double) empObj.get("x");
                 double y = (double) empObj.get("y");
                 boolean arrested = (boolean) empObj.get("arrested");
-                System.out.println("x: " + x);
-                System.out.println("y: " + y);
+                double powerCooldown = (double) empObj.get("powerCooldown");
+                double powerDuration = (double) empObj.get("powerDuration");
+                int power = Integer.parseInt(String.valueOf(empObj.get("power")));
                 Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y),
-                        enemyPowerUpList[i - 1], graph, arrested);
+                        power, graph, arrested, (float) powerCooldown, (float) powerDuration);
                 localEnemies.add(inf);
             }
         } catch (ParseException | IOException e) {
@@ -440,7 +475,7 @@ public class PlayScreen implements Screen {
 
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("saveSprite.json")) {
+        try (FileReader reader = new FileReader("saveSprite.json")) {
             //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList = (JSONArray) obj;
@@ -450,8 +485,6 @@ public class PlayScreen implements Screen {
                 JSONObject empObj = (JSONObject) e.get("sprite" + i);
                 double x = (double) empObj.get("x");
                 double y = (double) empObj.get("y");
-                System.out.println("x: " + x);
-                System.out.println("y: " + y);
                 NPC npc = new NPC(new Vector2((float) x, (float) y), graph);
                 localNPCs.add(npc);
             }
@@ -470,8 +503,7 @@ public class PlayScreen implements Screen {
 
         //Read JSON
         JSONParser jsonP = new JSONParser();
-        try(FileReader reader = new FileReader("saveSystem.json")) {
-            //Read JSON File
+        try (FileReader reader = new FileReader("saveSystem.json")) {
             Object obj = jsonP.parse(reader);
             JSONArray sysList = (JSONArray) obj;
 
@@ -481,6 +513,7 @@ public class PlayScreen implements Screen {
                 double x = (double) empObj.get("x");
                 double y = (double) empObj.get("y");
                 long state = (long) empObj.get("state");
+                System.out.println(state);
                 String room = (String) empObj.get("room");
                 ShipSystem sys = new ShipSystem((float) x, (float) y, room, graph, (int) state);
                 localSystems.add(sys);
@@ -489,7 +522,7 @@ public class PlayScreen implements Screen {
             e.printStackTrace();
         }
 
-        //Creating and placing infiltrators
+        //Creating and placing shipsystems
         systems = new ArrayList<ShipSystem>(localSystems);
     }
 
@@ -505,6 +538,7 @@ public class PlayScreen implements Screen {
         JSONObject spr = new JSONObject();
         spr.put("x", player.getX());
         spr.put("y", player.getY());
+        spr.put("health", hud.getAuberHealth());
 
         JSONObject sprObj = new JSONObject();
         sprObj.put("sprite" + counter, spr);
@@ -517,6 +551,9 @@ public class PlayScreen implements Screen {
             spr.put("x", enemies.get(i).getX());
             spr.put("y", enemies.get(i).getY());
             spr.put("arrested", enemies.get(i).getIsArrested());
+            spr.put("power", enemies.get(i).getPower());
+            spr.put("powerCooldown", enemies.get(i).getPowerCooldown());
+            spr.put("powerDuration", enemies.get(i).getPowerDuration());
 
             sprObj = new JSONObject();
             sprObj.put("sprite" + counter, spr);
@@ -543,27 +580,35 @@ public class PlayScreen implements Screen {
             sys.put("x", tiles.getSystems().get(i).getPosition().x);
             sys.put("y", tiles.getSystems().get(i).getPosition().y);
             sys.put("room", tiles.getSystems().get(i).getRoom());
-            sys.put("state", tiles.getSystems().get(i).getState());
+
+            // Since infiltrators don't remember which system they are attacking
+            // after being saved, systems that were under attack are saved as
+            // not being under attack. Thereby resetting the attacks.
+            if (tiles.getSystems().get(i).getState() == 2) {
+                sys.put("state", 2);
+            } else if (tiles.getSystems().get(i).getState() == 1) {
+                sys.put("state", 0);
+            } else if (tiles.getSystems().get(i).getState() == 0) {
+                sys.put("state", 0);
+            }
 
             JSONObject sysObj = new JSONObject();
             sysObj.put("system" + i, sys);
             sysList.add(sysObj);
         }
         // write sprite
-        try(FileWriter file = new FileWriter("saveSprite.json")) {
+        try (FileWriter file = new FileWriter("saveSprite.json")) {
             file.write(sprList.toJSONString());
             file.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         // write system
-        try(FileWriter file = new FileWriter("saveSystem.json")) {
+        try (FileWriter file = new FileWriter("saveSystem.json")) {
             file.write(sysList.toJSONString());
             file.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -656,29 +701,18 @@ public class PlayScreen implements Screen {
 
     public void updateInfiltrators(float dt) {
         for (Infiltrator enemy : enemies) {
-            enemy.updateTimers(dt * 100);
+            enemy.updateTimers();
 
             //the infiltrator will use their power if the auber is close enough and it's off cooldown
-            if (enemy.getPowerCooldown() > 500 && inRange(enemy) && !enemy.getIsArrested()) {
+            if (enemy.getPowerCooldown() > 500 && !enemy.getIsArrested()) {
                 enemy.usePower(this, tiles.getRoom(player.getX(), player.getY()));
             }
             //the infiltrator will stop their power when it's gone on past it's limit
             if (enemy.getPowerDuration() > 1000) {
-                enemy.stopPower(this);
+                enemy.resetPower();
             }
         }
         checkInfiltratorsSystems();
-    }
-
-    /**
-     * Determines if the given enemy is within a certain range of the auber
-     *
-     * @param enemy The enemy whose range is being checked
-     * @return True if the enemy is in range, false otherwise
-     */
-    public boolean inRange(Infiltrator enemy) {
-        return enemy.getX() < player.getX() + 1000 && enemy.getX() > player.getX() - 1000 &&
-                enemy.getY() < player.getY() + 1000 && enemy.getY() > player.getY() - 1000;
     }
 
     public void setHallucinate(boolean hallucinate) {

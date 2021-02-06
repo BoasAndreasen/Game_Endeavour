@@ -19,7 +19,7 @@ public class ShipSystem {
     }
 
     public void setState(int state) {
-        //state 0= operational, state 1=under attack, state 2= not operational
+        //state 0 = operational, state 1 = under attack, state 2 = not operational
         this.state = state;
     }
 

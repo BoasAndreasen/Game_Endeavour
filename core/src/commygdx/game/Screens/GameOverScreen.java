@@ -17,7 +17,7 @@ public class GameOverScreen implements Screen {
         gamecam = new OrthographicCamera();
         gamecam.setToOrtho(false, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
         font = new BitmapFont();
-        font.getData().setScale(5f) ;
+        font.getData().setScale(5f);
     }
 
     @Override
@@ -35,7 +35,8 @@ public class GameOverScreen implements Screen {
         //draw background, objects, etc.
         if (game.gameState == 2) {
             font.draw(game.batch, "Game Over: You Won!", AuberGame.V_WIDTH / 2 - 300, AuberGame.V_HEIGHT / 2);
-        } else {
+        }
+        else {
             font.draw(game.batch, "Game Over: You Lost", AuberGame.V_WIDTH / 2 - 300, AuberGame.V_HEIGHT / 2);
         }
         game.batch.end();

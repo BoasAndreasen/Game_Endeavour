@@ -1,20 +1,16 @@
 package commygdx.game.syst;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 
 public class MovementSystem {
 
     Collider collider;
     float movementSpeed;
-    private int direction;
     private boolean rightCollided, leftCollided, upCollided, downCollided;
-    //direction 1=left 2=right 3=up 4=down
 
     public MovementSystem(Vector2 position, float speed) {
         this.collider = new Collider(position);
         this.movementSpeed = speed;
-        this.direction = 0;
     }
 
     public void updatePos(Vector2 position) {
@@ -35,7 +31,6 @@ public class MovementSystem {
         if (!leftCollided) {
             rightCollided = false;
             newPos.x -= movementSpeed;
-            direction = 1;
         }
         return newPos;
     }
@@ -50,9 +45,7 @@ public class MovementSystem {
         if (!rightCollided) {
             leftCollided = false;
             newPos.x += movementSpeed;
-            this.direction = 2;
         }
-
         return newPos;
     }
 
@@ -66,7 +59,6 @@ public class MovementSystem {
         if (!upCollided) {
             downCollided = false;
             newPos.y += movementSpeed;
-            this.direction = 3;
         }
         return newPos;
     }
@@ -81,7 +73,6 @@ public class MovementSystem {
         if (!downCollided) {
             upCollided = false;
             newPos.y -= movementSpeed;
-            this.direction = 4;
         }
         return newPos;
     }

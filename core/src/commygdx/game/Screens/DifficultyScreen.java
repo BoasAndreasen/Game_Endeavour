@@ -16,15 +16,14 @@ public class DifficultyScreen implements Screen {
     private final boolean demo;
     private final boolean loadFromSave;
 
-    public DifficultyScreen(AuberGame game,boolean demo, boolean loadFromSave){
+    public DifficultyScreen(AuberGame game, boolean demo, boolean loadFromSave) {
         this.game = game;
-        this.demo=demo; 
-        this.loadFromSave=loadFromSave; 
+        this.demo = demo;
+        this.loadFromSave = loadFromSave;
         difftexture = new Texture("diffsc.png");
         OrthographicCamera gamecam = new OrthographicCamera();
         gamecam.setToOrtho(true, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
     }
-
 
     @Override
     public void show() {
@@ -41,23 +40,22 @@ public class DifficultyScreen implements Screen {
         game.batch.draw(difftexture, 40, 40, difftexture.getWidth() * 2, difftexture.getHeight() * 2);
         game.batch.end();
 
-        //player enters either playing mode or demo mode
+        //player enters either playing mode or demo mode with difficulty
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             game.gameState = 0;
-            game.createPlayScreen(this.demo,this.loadFromSave,"easy");
+            game.createPlayScreen(this.demo, this.loadFromSave, "easy");
 
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.B)) {
             game.gameState = 0;
-            game.createPlayScreen(this.demo, this.loadFromSave,"normal");
+            game.createPlayScreen(this.demo, this.loadFromSave, "normal");
 
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.C)) {
             game.gameState = 0;
-            game.createPlayScreen(false, false,"hard");
-
+            game.createPlayScreen(this.demo, this.loadFromSave, "hard");
         }
 
     }
