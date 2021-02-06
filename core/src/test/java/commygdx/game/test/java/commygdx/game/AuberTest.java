@@ -233,13 +233,23 @@ class AuberTest {
 
     }
 
+    @Test
+    void testDifficulties()
+    {
 
+    };
 
-    /**
-     *  Additional tests - tests after new implementation
-     *  Test_9:UR_DIFFICULTIES
-     *  Test_10:UR_POWERUPS
-     *  Test_11:UR_SAVEGAME, FR_LOADFILE, FR_QUITGAME
-     */
+    @Test
+    void testPowerups()
+    {
+
+    };
+
+    @Test
+    void testSaveGame()
+    {
+
+    };
+
 
 }
