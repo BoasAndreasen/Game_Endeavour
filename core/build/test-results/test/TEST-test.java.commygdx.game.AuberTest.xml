@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test.java.commygdx.game.AuberTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-02-06T13:40:41" hostname="DESKTOP-OGPGK3B" time="1.639">
+  <properties/>
+  <testcase name="Test_1: Test if the teleport only available when Auber is on the teleport pad" classname="test.java.commygdx.game.AuberTest" time="1.639"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
