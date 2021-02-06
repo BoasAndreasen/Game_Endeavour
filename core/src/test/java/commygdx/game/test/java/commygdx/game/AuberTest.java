@@ -3,6 +3,7 @@ package test.java.commygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 
 import commygdx.game.AuberGame;
 import commygdx.game.Screens.PlayScreen;
@@ -17,23 +18,30 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.Assert.*;
+
 
 import org.mockito.Mock;
-import org.mockito.configuration.IMockitoConfiguration;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
+@ExtendWith(MockitoExtension.class)
 class AuberTest {
 
-    PlayerInput playerInput;
-    PlayScreen playScreen;
-    AuberGame auberGame;
-    Auber auber;
-    TeleportMenu teleportMenu;
+    @Mock
+    PlayerInput playerInputMock;
+    PlayScreen playScreenMock;
+    AuberGame auberGameMock;
+    Auber auberMock;
+    TeleportMenu teleportMenuMock;
+    Hud hudMock;
+
 
     @BeforeEach
     /**
@@ -44,7 +52,7 @@ class AuberTest {
      * Black Box testing could be possible but the whole structure will need to be refactor
      */
     void setUp() {
-        //playScreen = new PlayScreen(auberGame, false, false, "easy");
+        MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
@@ -132,11 +140,29 @@ class AuberTest {
          *
          * This test should test if auber is moving when Keys are pressed
          * handleMovement will set the Auber's position with setPosition which no value can be use for testing
-         * handleMovement is override from Character.java which makes it very difficult to refactor
+         * handleMovement is a protect class and it is override from Character.java which makes it very difficult to refactor
          *
          * Possible Solution:
          * Mock getDirection() and test Auber's position X and Y
          */
+
+        /**
+         * float x = 900; //Setup X
+         * float y = 500; //Setup Y
+         * auberMock.setPosition(x, y); //Random position
+         * assertEquals(900, auberMock.getX());
+         * assertEquals(500, auberMock.getY());
+         *
+         * when(playerInputMock.getDirection()).thenReturn(1); //Setting Input as going UP
+         * auberMock.handleMovement(); //code not working from here handleMovement is protected don't know what to do with it
+         * assertTrue(auberMock.getY() > 900);
+         *
+         * when(playerInputMock.getDirection()).thenReturn(2); //Setting Input as going RIGHT
+         * auberMock.handleMovement(); //code not working from here handleMovement is protected don't know what to do with it
+         * assertTrue(auberMock.getX() > 500);
+         */
+
+
     }
 
     @Test
@@ -152,8 +178,23 @@ class AuberTest {
          *              Auber.arrest() -> Hud.infiltratorCaught();
          *
          * This test should test if infiltrators are arrested when SPACE key is pressed
+         *
+         * Possible Solution:
+         * Mock PlayerInput.arrest() and test Hud.infiltratorsRemaining
          */
+
+
+         hudMock.infiltratorsRemaining = 1;
+         ArrayList<Infiltrator> i;
+         i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1,
+                 playScreenMock.graph, false, 0, 0)));
+         auberMock.setPosition(550, 220);
+         when(playerInputMock.arrest()).thenReturn(true); //Player press SPACE
+         auberMock.arrest(i, hudMock);
+         assertEquals(0, hudMock.infiltratorsRemaining);
+
     }
+
 
     @Test
     @DisplayName("Test_5: Test if the player can lose the game when no system remaining or Auber's health is 0")
@@ -182,18 +223,18 @@ class AuberTest {
     @Test
     @DisplayName("Test_7: Test if system can be destroy by the Infiltrator")
     /**
-     * Test_Case_6.1: Test when Infiltrator >= 1
-     * Test_Case_6.2: Test when Infiltrator = 0
+     * Test_Case_7.1: Test if system being sabotage when infiltrator near
+     * Test_Case_7.2: Test if system being sabotage when infiltrator not near
      */
     void testSabotage(){
 
     }
 
     @Test
-    @DisplayName("Test_A8: Test if Auber can be damaged by the Infiltrator")
+    @DisplayName("Test_8: Test if Auber can be damaged by the Infiltrator")
     /**
-     * Test_Case_6.1: Test when Infiltrator >= 1
-     * Test_Case_6.2: Test when Infiltrator = 0
+     * Test_Case_8.1: Test if Auber is being damaged when near Infiltrator
+     * Test_Case_8.2: Test if Auber is being damaged when not near Infiltrator
      */
     void testDamage(){
 

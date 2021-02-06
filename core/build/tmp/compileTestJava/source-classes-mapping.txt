@@ -1,54 +1,6 @@
-commygdx/game/ShipSystem.java
- commygdx.game.ShipSystem
 test/java/commygdx/game/InfiltratorTest.java
  test.java.commygdx.game.InfiltratorTest
-commygdx/game/actors/DemoAuber.java
- commygdx.game.actors.DemoAuber
-commygdx/game/AI/graph/queue/PriorityItem.java
- commygdx.game.AI.graph.queue.PriorityItem
-commygdx/game/TileWorld.java
- commygdx.game.TileWorld
-commygdx/game/AI/DemoAI.java
- commygdx.game.AI.DemoAI
-commygdx/game/input/PlayerInput.java
- commygdx.game.input.PlayerInput
-commygdx/game/AuberGame.java
- commygdx.game.AuberGame
-commygdx/game/Utility.java
- commygdx.game.Utility
-commygdx/game/AI/graph/queue/PriorityQueue.java
- commygdx.game.AI.graph.queue.PriorityQueue
-commygdx/game/AI/MovementAI.java
- commygdx.game.AI.MovementAI
-commygdx/game/Screens/GameOverScreen.java
- commygdx.game.Screens.GameOverScreen
-commygdx/game/Screens/IntroScreen.java
- commygdx.game.Screens.IntroScreen
-commygdx/game/AI/graph/PathNode.java
- commygdx.game.AI.graph.PathNode
-commygdx/game/syst/MovementSystem.java
- commygdx.game.syst.MovementSystem
-commygdx/game/AI/InfiltratorAI.java
- commygdx.game.AI.InfiltratorAI
-test/java/commygdx/game/AuberTest.java
- test.java.commygdx.game.AuberTest
-commygdx/game/actors/Auber.java
- commygdx.game.actors.Auber
-commygdx/game/actors/Infiltrator.java
- commygdx.game.actors.Infiltrator
-commygdx/game/Screens/TeleportMenu.java
- commygdx.game.Screens.TeleportMenu
-commygdx/game/AI/graph/PathGraph.java
- commygdx.game.AI.graph.PathGraph
-commygdx/game/stages/Hud.java
- commygdx.game.stages.Hud
-commygdx/game/Screens/PlayScreen.java
- commygdx.game.Screens.PlayScreen
-commygdx/game/syst/Collider.java
- commygdx.game.syst.Collider
-commygdx/game/actors/NPC.java
- commygdx.game.actors.NPC
-commygdx/game/actors/Character.java
- commygdx.game.actors.Character
 test/java/commygdx/game/NPCTest.java
  test.java.commygdx.game.NPCTest
+test/java/commygdx/game/AuberTest.java
+ test.java.commygdx.game.AuberTest
