@@ -34,19 +34,21 @@ public class IntroScreen implements Screen {
         game.batch.draw(introTexture, 40, 40, introTexture.getWidth() * 2, introTexture.getHeight() * 2);
         game.batch.end();
 
-        //player enters either playing mode or demo mode
+        // normal mode without save
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            game.createDifficultyScreen(false,false);
-            game.gameState=5;
+            game.createDifficultyScreen(false, false);
+            game.gameState = 5;
         }
 
+        // enter save
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            game.createDifficultyScreen(false,true);
-            game.gameState=5;
+            game.createDifficultyScreen(false, true);
+            game.gameState = 5;
         }
 
+        //demo mode
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            game.createPlayScreen(true, false,"easy");
+            game.createPlayScreen(true, false, "easy");
             game.gameState = 0;
         }
     }

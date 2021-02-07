@@ -186,7 +186,8 @@ class AuberTest {
 
          hudMock.infiltratorsRemaining = 1;
          ArrayList<Infiltrator> i;
-         i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1, playScreenMock.graph, false)));
+         i = new ArrayList<Infiltrator>(Arrays.asList(new Infiltrator(new Vector2(500, 200), 1,
+                 playScreenMock.graph, false, 0, 0)));
          auberMock.setPosition(550, 220);
          when(playerInputMock.arrest()).thenReturn(true); //Player press SPACE
          auberMock.arrest(i, hudMock);

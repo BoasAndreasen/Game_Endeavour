@@ -5,8 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 public class Utility {
     private static final float DISTANCE_BUFFER = 10;
 
-    public static final String[] rooms = {"brig", "crew", "infirmary", "laboratory", "command", "engine"};
-
     /**
      * Gives a random positive integer less than n
      *

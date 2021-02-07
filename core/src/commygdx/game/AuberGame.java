@@ -15,7 +15,7 @@ public class AuberGame extends com.badlogic.gdx.Game {
     public String onTeleport;
     public Screen playscreen;
     public Screen diffscreen;
-    //game state -1= intro screen 0=exit introscreen 1=playing 2=win 3=lost
+    //game state -1 = intro screen 0 = exit introscreen 1 = playing 2 = win 3 = lost
     public int gameState;
     private GameOverScreen gameOverScreen;
 
@@ -32,15 +32,15 @@ public class AuberGame extends com.badlogic.gdx.Game {
     /**
      * Initialises the game's play screen
      *
-     * @param demo If the screen should be in demo mode or not
+     * @param demo     If the screen should be in demo mode or not
      * @param loadGame if data should be loaded from previous save
      */
-    public void createPlayScreen(boolean demo, boolean loadGame,String difficulty) {
-        playscreen = new PlayScreen(this, demo, loadGame,difficulty);
+    public void createPlayScreen(boolean demo, boolean loadGame, String difficulty) {
+        playscreen = new PlayScreen(this, demo, loadGame, difficulty);
     }
 
-    public void createDifficultyScreen(boolean demo,boolean loadGame){
-        diffscreen=new DifficultyScreen(this,demo,loadGame);
+    public void createDifficultyScreen(boolean demo, boolean loadGame) {
+        diffscreen = new DifficultyScreen(this, demo, loadGame);
     }
 
     @Override
@@ -57,20 +57,14 @@ public class AuberGame extends com.badlogic.gdx.Game {
             setScreen(gameOverScreen);
         }
 
-        if (gameState==5){
+        if (gameState == 5) {
             setScreen(diffscreen);
         }
 
-        if ((onTeleport != "true") && (onTeleport != "false")) {
+        if ((!onTeleport.equals("true")) && (!onTeleport.equals("false"))) {
             //exit teleport screen
             setScreen(playscreen);
         }
-
-
-
-
-
-
     }
 
     @Override
@@ -81,6 +75,4 @@ public class AuberGame extends com.badlogic.gdx.Game {
     public void setGameState(int gameState) {
         this.gameState = gameState;
     }
-
-    public int getGameState(){return gameState;}
 }

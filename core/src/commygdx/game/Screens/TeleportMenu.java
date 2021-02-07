@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import commygdx.game.AuberGame;
-import commygdx.game.actors.Auber;
 
 public class TeleportMenu implements Screen {
     private final AuberGame game;
@@ -29,7 +27,6 @@ public class TeleportMenu implements Screen {
         gamecam.setToOrtho(false, AuberGame.V_WIDTH, AuberGame.V_HEIGHT);
         //get button textures
         mapTexture = new Texture("mapv3_signs.png");
-        //button rectange bounds
 
         //teleport buttons
         brigRect = new Rectangle(870, 465, 183, 308);
@@ -69,27 +66,29 @@ public class TeleportMenu implements Screen {
         //convert click screen cords to world
         Vector3 clickPos = new Vector3(x, y, 0);
         gamecam.unproject(clickPos);
+
         //check which button pressed
         if (brigRect.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "brig";
         }
-        if (commandRect.contains(clickPos.x, clickPos.y)) {
+
+        else if (commandRect.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "command";
         }
-        if (crewRect.contains(clickPos.x, clickPos.y)) {
+
+        else if (crewRect.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "crew";
         }
-        if (engineRect.contains(clickPos.x, clickPos.y)) {
+        else if (engineRect.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "engine";
         }
-        if (infirmaryRect.contains(clickPos.x, clickPos.y)) {
+        else if (infirmaryRect.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "infirmary";
         }
-        if (laboratoryRext.contains(clickPos.x, clickPos.y)) {
+        else if (laboratoryRext.contains(clickPos.x, clickPos.y)) {
             game.onTeleport = "laboratory";
         }
     }
-
 
     @Override
     public void resize(int width, int height) {
