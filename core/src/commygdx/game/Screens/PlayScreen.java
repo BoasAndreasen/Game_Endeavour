@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class PlayScreen implements Screen {
-    private final String difficulty;
+    public final String difficulty;
     protected AuberGame auberGame;
     private Hud hud;
     private final OrthographicCamera gamecam;
@@ -57,7 +57,7 @@ public class PlayScreen implements Screen {
     private boolean saved;
     private final boolean demo;
     // Duration of power-up
-    private int duration;
+    public int duration;
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
 
@@ -295,7 +295,7 @@ public class PlayScreen implements Screen {
     /**
      * sets enemy's speed depending on difficulty
      */
-    private void diffCheck() {
+    public void diffCheck() {
         if (difficulty.equals("easy")) {
             player.movementSystem.setSpeed(6f);
             for (Infiltrator enemy : enemies) {
@@ -316,7 +316,7 @@ public class PlayScreen implements Screen {
         }
     }
 
-    private void teleportCheck() {
+    public void teleportCheck() {
         //teleport is disabled in demo mode, because the ai can't handle it
         if (demo) {
             return;
@@ -334,7 +334,7 @@ public class PlayScreen implements Screen {
     /**
      * Sets power-up back or calls default
      */
-    private void powerupCheck() {
+    public void powerupCheck() {
         if (demo) {
             return;
         }

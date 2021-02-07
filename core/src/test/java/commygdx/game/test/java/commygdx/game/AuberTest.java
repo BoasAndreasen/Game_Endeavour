@@ -239,23 +239,7 @@ class AuberTest {
 
     }
 
-    @Test
-    void testDifficulties()
-    {
 
-    };
-
-    @Test
-    void testPowerups()
-    {
-
-    };
-
-    @Test
-    void testSaveGame()
-    {
-
-    };
 
 
 }
