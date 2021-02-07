@@ -1,9 +1,9 @@
 commygdx/game/ShipSystem.java
  commygdx.game.ShipSystem
-commygdx/game/actors/DemoAuber.java
- commygdx.game.actors.DemoAuber
 commygdx/game/AI/graph/queue/PriorityItem.java
  commygdx.game.AI.graph.queue.PriorityItem
+commygdx/game/actors/DemoAuber.java
+ commygdx.game.actors.DemoAuber
 commygdx/game/TileWorld.java
  commygdx.game.TileWorld
 commygdx/game/AI/DemoAI.java

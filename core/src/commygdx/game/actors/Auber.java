@@ -2,29 +2,26 @@ package commygdx.game.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import commygdx.game.TileWorld;
 import commygdx.game.input.PlayerInput;
 import commygdx.game.stages.Hud;
-import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Auber extends Character {
     protected boolean facingRight;
+    private boolean invisible;
 
-
-    public Auber(Vector2 position) {
+    public Auber(Vector2 position, boolean invisible, float speed) {
         super(position);
         shuffle();
-        movementSystem.setSpeed(6f);
+        movementSystem.setSpeed(speed);
         facingRight = true;
+        this.invisible = invisible;
+        checkInvisibleTexture();
     }
-
 
     @Override
     protected Texture getTexture() {
@@ -80,38 +77,30 @@ public class Auber extends Character {
         return false;
     }
 
-    public String powerUpCheck(TileWorld tiles){
-
-        Rectangle healthrect= tiles.getHealthpowerUp();
-        Rectangle invisrect= tiles.getInvispowerUp();
+    public String powerUpCheck(TileWorld tiles) {
+        Rectangle healthrect = tiles.getHealthpowerUp();
+        Rectangle invisrect = tiles.getInvispowerUp();
         Rectangle slowrect = tiles.getSlowpowerUp();
-        Rectangle speedrect= tiles.getSpeedpowerUp();
-        Rectangle reducerect= tiles.getReduceDamage();
+        Rectangle speedrect = tiles.getSpeedpowerUp();
+        Rectangle shieldrect = tiles.getShieldpowerUp();
 
-
-
-
-            if (sprite.getBoundingRectangle().contains(slowrect)) {
-                return "Slow";
-            }
-            if (sprite.getBoundingRectangle().contains(speedrect)) {
-                return "Speed";
-            }
-            if (sprite.getBoundingRectangle().contains(reducerect)) {
-                return "Rdmg";
-            }
-            if (sprite.getBoundingRectangle().contains(healthrect)) {
-                return "Health";
-            }
-            if (sprite.getBoundingRectangle().contains(invisrect)) {
-                return "Invis";
-            }
-            else{
-                return "null";
-            }
-
-
-
+        if (sprite.getBoundingRectangle().contains(slowrect)) {
+            return "Slow";
+        }
+        if (sprite.getBoundingRectangle().contains(speedrect)) {
+            return "Speed";
+        }
+        if (sprite.getBoundingRectangle().contains(shieldrect)) {
+            return "Shield";
+        }
+        if (sprite.getBoundingRectangle().contains(healthrect)) {
+            return "Health";
+        }
+        if (sprite.getBoundingRectangle().contains(invisrect)) {
+            return "Invis";
+        } else {
+            return "null";
+        }
     }
 
     /**
@@ -134,40 +123,42 @@ public class Auber extends Character {
         }
     }
 
-
     /**
      * Damage auber if infiltrators are in range
      *
      * @param infiltrators A list of all infiltrators in the game
      * @param hud          The games HUD overlay
      */
-    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud,boolean power) {
+    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud) {
         /* Damage auber if the infiltrators are in range
          * @param infiltrators this list of infiltrators that are being checked
          * @hud the hud overlay*/
         for (Infiltrator infiltrator : infiltrators) {
             if (Math.abs(infiltrator.getX() - this.getX()) < 100 && Math.abs(infiltrator.getY() - this.getY()) < 100) {
-                hud.auberDamaged(power);
+                hud.auberDamaged();
             }
         }
     }
 
-    public void goInvisible(boolean power)  {
-        if (power==true) {
+    public void checkInvisibleTexture() {
+        if (invisible) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
-        }
-        else{
+        } else {
             sprite.setTexture(getTexture());
         }
-
-
     }
-
-
 
     //moves the camera to the auber when game starts
     public void shuffle() {
         Vector2 position = movementSystem.left();
         setPosition(position.x, position.y);
+    }
+
+    public boolean getInvisible() {
+        return invisible;
+    }
+
+    public void setInvisible(boolean invisible) {
+        this.invisible = invisible;
     }
 }

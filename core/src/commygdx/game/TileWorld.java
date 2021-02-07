@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import commygdx.game.Screens.PlayScreen;
-import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -18,7 +17,7 @@ public class TileWorld {
     private Rectangle invispowerUp;
     private Rectangle slowpowerUp;
     private Rectangle speedpowerUp;
-    private Rectangle reduceDamage;
+    private Rectangle shieldpowerUp;
     private Rectangle infirmary;
     private Rectangle brig;
     private Rectangle crew;
@@ -69,45 +68,49 @@ public class TileWorld {
             rect.height = 25;
             teleporters.put(getRoom(rect.x, rect.y), rect);
         }
-        //walls
 
+        //walls
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
             collisionBoxes.add(rect);
         }
 
-        for (MapObject object:map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect= ((RectangleMapObject)object).getRectangle();
-            rect.x=rect.x*scale +rect.width*scale/2;
+        for (MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            rect.x = rect.x * scale + rect.width * scale / 2;
             rect.y = rect.y * scale + rect.height * scale / 2;
-            rect.width=25;
-            rect.height=25;
-            healthpowerUp=rect;
+            rect.width = 25;
+            rect.height = 25;
+            healthpowerUp = rect;
         }
-        for (MapObject object:map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
-            rect.width=25;
-            rect.height=25;
-            invispowerUp=rect;
+
+        for (MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
+            rect.width = 25;
+            rect.height = 25;
+            invispowerUp = rect;
 
         }
-        for (MapObject object:map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
-            rect.width=25;
-            rect.height=25;
-            speedpowerUp=rect;
+
+        for (MapObject object : map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
+            rect.width = 25;
+            rect.height = 25;
+            speedpowerUp = rect;
         }
-        for (MapObject object:map.getLayers().get(14).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
-            rect.width=25;
-            rect.height=25;
-            slowpowerUp=rect;
+
+        for (MapObject object : map.getLayers().get(14).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
+            rect.width = 25;
+            rect.height = 25;
+            slowpowerUp = rect;
         }
-        for (MapObject object:map.getLayers().get(15).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect= magnifyRectange(((RectangleMapObject)object).getRectangle());
-            rect.width=25;
-            rect.height=25;
-            reduceDamage=rect;
+
+        for (MapObject object : map.getLayers().get(15).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
+            rect.width = 25;
+            rect.height = 25;
+            shieldpowerUp = rect;
         }
     }
 
@@ -158,8 +161,8 @@ public class TileWorld {
         return invispowerUp;
     }
 
-    public Rectangle getReduceDamage() {
-        return reduceDamage;
+    public Rectangle getShieldpowerUp() {
+        return shieldpowerUp;
     }
 
     public Rectangle getSlowpowerUp() {
@@ -192,17 +195,23 @@ public class TileWorld {
     public String getRoom(float x, float y) {
         if (infirmary.contains(x, y)) {
             return "infirmary";
-        } else if (command.contains(x, y)) {
+        }
+        else if (command.contains(x, y)) {
             return "command";
-        } else if (laboratory.contains(x, y)) {
+        }
+        else if (laboratory.contains(x, y)) {
             return "laboratory";
-        } else if (brig.contains(x, y)) {
+        }
+        else if (brig.contains(x, y)) {
             return "brig";
-        } else if (crew.contains(x, y)) {
+        }
+        else if (crew.contains(x, y)) {
             return "crew";
-        } else if (engine.contains(x, y)) {
+        }
+        else if (engine.contains(x, y)) {
             return "engine";
-        } else {
+        }
+        else {
             return "none";
         }
     }

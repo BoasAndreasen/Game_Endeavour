@@ -1,6 +1,5 @@
 package commygdx.game.actors;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import commygdx.game.AI.DemoAI;
 import commygdx.game.AI.graph.PathGraph;
@@ -13,7 +12,7 @@ public class DemoAuber extends Auber {
     private final DemoAI ai;
 
     public DemoAuber(Vector2 position, PathGraph graph) {
-        super(position);
+        super(position, false, 6f);
         ai = new DemoAI(graph);
     }
 

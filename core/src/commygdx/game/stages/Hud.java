@@ -3,9 +3,7 @@ package commygdx.game.stages;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -13,7 +11,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import commygdx.game.AuberGame;
 import commygdx.game.ShipSystem;
 import commygdx.game.actors.Infiltrator;
-import jdk.nashorn.internal.runtime.doubleconv.CachedPowers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,36 +19,39 @@ public class Hud {
     public Stage stage;
     private int systemsUp;
     private int auberHealth;
+    // auber shield power-up
+    private boolean shieldPower;
+    private String powerUpLabelText;
     private final Label systemLabel;
     private final Label auberLabel;
     public int infiltratorsRemaining;
     private final Label infiltratorLabel;
-    private final Label attackLabel;
     private final Label hallucinateLabel;
+    public final Label attackLabel;
     public final Label powerUpLabel;
 
-
-
     //used for buttons,text, etc
-    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth) {
+    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth, boolean shieldPower,
+               String powerUpLabelText) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
-
 
         Table table = new Table();
         table.top();
         table.setFillParent(true);
 
-        systemsUp = systems.size();
+        this.powerUpLabelText = powerUpLabelText;
+        this.systemsUp = systems.size();
 
-        int localIsarrested = 0;
-        for (int i = 0; i < enemies.size(); i++) {
-            if (!enemies.get(i).getIsArrested()) {
-                localIsarrested += 1;
+        int localIsArrested = 0;
+        for (Infiltrator enemy : enemies) {
+            if (!enemy.getIsArrested()) {
+                localIsArrested += 1;
             }
         }
-        infiltratorsRemaining = localIsarrested;
+        infiltratorsRemaining = localIsArrested;
         this.auberHealth = auberHealth;
+        this.shieldPower = shieldPower;
 
         //System.out.format("%d / 15 systems", systemsUp);
         BitmapFont font = new BitmapFont();
@@ -66,7 +66,7 @@ public class Hud {
         Label auberTextLabel = new Label("auber health", new Label.LabelStyle(font, Color.WHITE));
 
         //powerup Label
-        powerUpLabel = new Label("None", new Label.LabelStyle(font, Color.WHITE));
+        powerUpLabel = new Label(powerUpLabelText, new Label.LabelStyle(font, Color.WHITE));
         Label powerUpTextLabel = new Label("Current powerup", new Label.LabelStyle(font, Color.WHITE));
 
         //remaining infiltrators
@@ -104,7 +104,6 @@ public class Hud {
         table.row();
         table.add(powerUpLabel).expandX().padTop(50);
 
-
         stage.addActor(table);
     }
 
@@ -119,12 +118,9 @@ public class Hud {
     /**
      * Updates the HUD to decrease the health of auber
      */
-    public void auberDamaged(boolean power) {
-        if (power==false){
+    public void auberDamaged() {
+        if (!shieldPower) {
             auberHealth -= 1;
-        }
-        else{
-            auberHealth-=0.8;
         }
 
         auberLabel.setText(String.format("%d / 100", auberHealth));
@@ -138,12 +134,12 @@ public class Hud {
         auberLabel.setText(String.format("%d / 100", auberHealth));
     }
 
-    public void healthPower(){
-        if (this.auberHealth<=80) {
-           this.auberHealth+=20;
+    public void healthPower() {
+        if (this.auberHealth <= 80) {
+            this.auberHealth += 20;
         }
-        if ((this.auberHealth>80) && (this.auberHealth<100)){
-            this.auberHealth=100;
+        if ((this.auberHealth > 80) && (this.auberHealth < 100)) {
+            this.auberHealth = 100;
         }
         auberLabel.setText(String.format("%d / 100", auberHealth));
     }
@@ -170,6 +166,7 @@ public class Hud {
         /*Update hud to reflect attacks*/
         String room = "";
         systemsUp = 0;
+
         for (ShipSystem system : systems) {
             if (system.getState() == 1) {
                 if (!room.contains(system.getRoom())) {
@@ -184,6 +181,7 @@ public class Hud {
         if (room.length() < 1) {
             room = "None";
         }
+
         attackLabel.setText(room);
         systemLabel.setText(String.format("%d / 15", systemsUp));
     }
@@ -200,7 +198,19 @@ public class Hud {
         return auberHealth;
     }
 
-    public void setAuberHealth(int health) {
-        this.auberHealth = health;
+    public void setShieldPower(boolean shieldPower) {
+        this.shieldPower = shieldPower;
+    }
+
+    public boolean getshieldPower() {
+        return shieldPower;
+    }
+
+    public String getPowerUpLabelText() {
+        return powerUpLabelText;
+    }
+
+    public void setPowerUpLabelText(String powerUpLabelText) {
+        this.powerUpLabelText = powerUpLabelText;
     }
 }
