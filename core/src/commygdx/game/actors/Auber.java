@@ -14,10 +14,10 @@ public class Auber extends Character {
     protected boolean facingRight;
     private boolean invisible;
 
-    public Auber(Vector2 position, boolean invisible) {
+    public Auber(Vector2 position, boolean invisible, float speed) {
         super(position);
         shuffle();
-        movementSystem.setSpeed(6f);
+        movementSystem.setSpeed(speed);
         facingRight = true;
         this.invisible = invisible;
         checkInvisibleTexture();

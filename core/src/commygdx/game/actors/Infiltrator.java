@@ -20,7 +20,7 @@ public class Infiltrator extends Character {
     private boolean facingRight;
 
     public Infiltrator(Vector2 position, int power, PathGraph graph, boolean isArrested,
-                       float powerCooldown, float powerDuration) {
+                       float powerCooldown, float powerDuration, float speed) {
         super(position);
         this.setPosition(position.x, position.y);
         this.power = power;
@@ -29,6 +29,7 @@ public class Infiltrator extends Character {
         this.isArrested = isArrested;
         this.ai = new InfiltratorAI(graph);
         this.facingRight = true;
+        movementSystem.setSpeed(speed);
     }
 
     @Override

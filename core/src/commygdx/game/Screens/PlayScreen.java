@@ -148,7 +148,7 @@ public class PlayScreen implements Screen {
         //A different version of Auber is used for the player depending on if it's a demo or not
         if (!demo) {
             if (!loadFromSave) {
-                player = new Auber(new Vector2(450 * scale, 778 * scale), false);
+                player = new Auber(new Vector2(450 * scale, 778 * scale), false, 6f);
             } else {
                 loadAuberSave();
             }
@@ -162,21 +162,21 @@ public class PlayScreen implements Screen {
             //Creating and placing infiltrators
             enemies = new ArrayList<Infiltrator>(Arrays.asList(
                     new Infiltrator(new Vector2(4700, 2000), 1, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(4800, 2300), 2, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(5000, 7356), 3, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(4732, 7000), 4, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(4732, 7500), 1, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(4732, 7800), 2, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(4200, 7800), 3, graph, false,
-                            0, 0),
+                            0, 0, 6f),
                     new Infiltrator(new Vector2(5400, 7800), 4, graph, false,
-                            0, 0)
+                            0, 0, 6f)
             ));
         } else {
             loadEnemySave();
@@ -463,8 +463,8 @@ public class PlayScreen implements Screen {
             double x = (double) j.get("x");
             double y = (double) j.get("y");
             boolean invisible = (boolean) j.get("invisible");
-            //double speed = (double) j.get("speed");
-            player = new Auber(new Vector2((float) x, (float) y), invisible);
+            double speed = (double) j.get("speed");
+            player = new Auber(new Vector2((float) x, (float) y), invisible, (float) speed);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -492,8 +492,9 @@ public class PlayScreen implements Screen {
                 double powerCooldown = (double) empObj.get("powerCooldown");
                 double powerDuration = (double) empObj.get("powerDuration");
                 int power = Integer.parseInt(String.valueOf(empObj.get("power")));
+                double speed = (double) empObj.get("speed");
                 Infiltrator inf = new Infiltrator(new Vector2((float) x, (float) y),
-                        power, graph, arrested, (float) powerCooldown, (float) powerDuration);
+                        power, graph, arrested, (float) powerCooldown, (float) powerDuration, (float) speed);
                 localEnemies.add(inf);
             }
         } catch (ParseException | IOException e) {
