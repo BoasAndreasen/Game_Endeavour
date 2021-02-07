@@ -74,14 +74,18 @@ public class PlayScreen implements Screen {
     private final TileWorld tiles;
     protected int scale;
 
-
     public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave, String difficulty) {
         this.auberGame = auberGame;
         this.demo = demo;
         this.scale = AuberGame.ZOOM;
         this.loadFromSave = loadFromSave;
         this.difficulty = difficulty;
-        this.duration = 0;
+        if (loadFromSave) {
+            this.loadDurationSave();
+        } else {
+            this.duration = 0;
+        }
+
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, gamecam);
         /*Possible fullscreen
@@ -115,7 +119,7 @@ public class PlayScreen implements Screen {
         hallucinate = false;
 
         if (!loadFromSave) {
-            hud = new Hud(enemies, tiles.getSystems(), 100);
+            hud = new Hud(enemies, tiles.getSystems(), 100, false, "None");
         } else {
             loadHudSave();
         }
@@ -144,7 +148,7 @@ public class PlayScreen implements Screen {
         //A different version of Auber is used for the player depending on if it's a demo or not
         if (!demo) {
             if (!loadFromSave) {
-                player = new Auber(new Vector2(450 * scale, 778 * scale));
+                player = new Auber(new Vector2(450 * scale, 778 * scale), false);
             } else {
                 loadAuberSave();
             }
@@ -205,7 +209,7 @@ public class PlayScreen implements Screen {
         }
 
         shipStage.act(dt);
-        player.damageAuber(enemies, hud, false);
+        player.damageAuber(enemies, hud);
         player.arrest(enemies, hud);
     }
 
@@ -337,29 +341,39 @@ public class PlayScreen implements Screen {
         if (duration > 0) {
             if (player.powerUpCheck(tiles).equals("Health")) {
                 hud.healthPower();
+                hud.setPowerUpLabelText("Health");
                 hud.powerUpLabel.setText("Health");
             }
             if (player.powerUpCheck(tiles).equals("Invis")) {
-                player.goInvisible(true);
+                player.setInvisible(true);
+                player.checkInvisibleTexture();
+                hud.setPowerUpLabelText("Invisible");
                 hud.powerUpLabel.setText("Invisible");
             }
             if (player.powerUpCheck(tiles).equals("Slow")) {
+                hud.setPowerUpLabelText("Slow Infiltrators");
                 hud.powerUpLabel.setText("Slow Infiltrators");
                 for (Infiltrator enemy : enemies) {
                     enemy.setSpeed(2f);
                 }
             }
             if (player.powerUpCheck(tiles).equals("Speed")) {
+                hud.setPowerUpLabelText("Speed");
                 hud.powerUpLabel.setText("Speed");
                 player.movementSystem.setSpeed(9f);
             }
-            if (player.powerUpCheck(tiles).equals("Rdmg")) {
-                hud.powerUpLabel.setText("Reduce Damage");
-                player.damageAuber(enemies, hud, true);
+            if (player.powerUpCheck(tiles).equals("Shield")) {
+                hud.setPowerUpLabelText("Speed");
+                hud.powerUpLabel.setText("Shield");
+                hud.setShieldPower(true);
+                player.damageAuber(enemies, hud);
             }
         } else {
+            hud.setPowerUpLabelText("None");
             hud.powerUpLabel.setText("None");
-            player.goInvisible(false);
+            player.setInvisible(false);
+            player.checkInvisibleTexture();
+            hud.setShieldPower(false);
             diffCheck();
         }
     }
@@ -405,8 +419,29 @@ public class PlayScreen implements Screen {
 
             JSONObject j = (JSONObject) empObj.get("sprite0");
             int health = Integer.parseInt(String.valueOf(j.get("health")));
-            hud = new Hud(enemies, tiles.getSystems(), health);
+            boolean shield = (boolean) j.get("shield");
+            String powerup = (String) j.get("powerup");
+            hud = new Hud(enemies, tiles.getSystems(), health, shield, powerup);
 
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Load duration from save
+     */
+    private void loadDurationSave() {
+        //Read JSON
+        JSONParser jsonP = new JSONParser();
+        try (FileReader reader = new FileReader("saveSprite.json")) {
+            //Read JSON File
+            Object obj = jsonP.parse(reader);
+            JSONArray sprList1 = (JSONArray) obj;
+            JSONObject empObj = (JSONObject) sprList1.get(0);
+
+            JSONObject j = (JSONObject) empObj.get("sprite0");
+            duration = Integer.parseInt(String.valueOf(j.get("duration")));
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -427,7 +462,9 @@ public class PlayScreen implements Screen {
             JSONObject j = (JSONObject) empObj.get("sprite0");
             double x = (double) j.get("x");
             double y = (double) j.get("y");
-            player = new Auber(new Vector2((float) x, (float) y));
+            boolean invisible = (boolean) j.get("invisible");
+            //double speed = (double) j.get("speed");
+            player = new Auber(new Vector2((float) x, (float) y), invisible);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -513,7 +550,6 @@ public class PlayScreen implements Screen {
                 double x = (double) empObj.get("x");
                 double y = (double) empObj.get("y");
                 long state = (long) empObj.get("state");
-                System.out.println(state);
                 String room = (String) empObj.get("room");
                 ShipSystem sys = new ShipSystem((float) x, (float) y, room, graph, (int) state);
                 localSystems.add(sys);
@@ -539,6 +575,11 @@ public class PlayScreen implements Screen {
         spr.put("x", player.getX());
         spr.put("y", player.getY());
         spr.put("health", hud.getAuberHealth());
+        spr.put("speed", player.movementSystem.getMovementSpeed());
+        spr.put("duration", duration);
+        spr.put("invisible", player.getInvisible());
+        spr.put("shield", hud.getshieldPower());
+        spr.put("powerup", hud.getPowerUpLabelText());
 
         JSONObject sprObj = new JSONObject();
         sprObj.put("sprite" + counter, spr);
@@ -554,6 +595,7 @@ public class PlayScreen implements Screen {
             spr.put("power", enemies.get(i).getPower());
             spr.put("powerCooldown", enemies.get(i).getPowerCooldown());
             spr.put("powerDuration", enemies.get(i).getPowerDuration());
+            spr.put("speed", enemies.get(i).movementSystem.getMovementSpeed());
 
             sprObj = new JSONObject();
             sprObj.put("sprite" + counter, spr);

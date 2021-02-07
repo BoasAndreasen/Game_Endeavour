@@ -12,12 +12,15 @@ import java.util.ArrayList;
 
 public class Auber extends Character {
     protected boolean facingRight;
+    private boolean invisible;
 
-    public Auber(Vector2 position) {
+    public Auber(Vector2 position, boolean invisible) {
         super(position);
         shuffle();
         movementSystem.setSpeed(6f);
         facingRight = true;
+        this.invisible = invisible;
+        checkInvisibleTexture();
     }
 
     @Override
@@ -79,7 +82,7 @@ public class Auber extends Character {
         Rectangle invisrect = tiles.getInvispowerUp();
         Rectangle slowrect = tiles.getSlowpowerUp();
         Rectangle speedrect = tiles.getSpeedpowerUp();
-        Rectangle reducerect = tiles.getReduceDamage();
+        Rectangle shieldrect = tiles.getShieldpowerUp();
 
         if (sprite.getBoundingRectangle().contains(slowrect)) {
             return "Slow";
@@ -87,8 +90,8 @@ public class Auber extends Character {
         if (sprite.getBoundingRectangle().contains(speedrect)) {
             return "Speed";
         }
-        if (sprite.getBoundingRectangle().contains(reducerect)) {
-            return "Rdmg";
+        if (sprite.getBoundingRectangle().contains(shieldrect)) {
+            return "Shield";
         }
         if (sprite.getBoundingRectangle().contains(healthrect)) {
             return "Health";
@@ -126,19 +129,19 @@ public class Auber extends Character {
      * @param infiltrators A list of all infiltrators in the game
      * @param hud          The games HUD overlay
      */
-    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud, boolean power) {
+    public void damageAuber(ArrayList<Infiltrator> infiltrators, Hud hud) {
         /* Damage auber if the infiltrators are in range
          * @param infiltrators this list of infiltrators that are being checked
          * @hud the hud overlay*/
         for (Infiltrator infiltrator : infiltrators) {
             if (Math.abs(infiltrator.getX() - this.getX()) < 100 && Math.abs(infiltrator.getY() - this.getY()) < 100) {
-                hud.auberDamaged(power);
+                hud.auberDamaged();
             }
         }
     }
 
-    public void goInvisible(boolean power) {
-        if (power) {
+    public void checkInvisibleTexture() {
+        if (invisible) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
         } else {
             sprite.setTexture(getTexture());
@@ -149,5 +152,13 @@ public class Auber extends Character {
     public void shuffle() {
         Vector2 position = movementSystem.left();
         setPosition(position.x, position.y);
+    }
+
+    public boolean getInvisible() {
+        return invisible;
+    }
+
+    public void setInvisible(boolean invisible) {
+        this.invisible = invisible;
     }
 }

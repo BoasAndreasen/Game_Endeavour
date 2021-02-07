@@ -12,7 +12,7 @@ public class DemoAuber extends Auber {
     private final DemoAI ai;
 
     public DemoAuber(Vector2 position, PathGraph graph) {
-        super(position);
+        super(position, false);
         ai = new DemoAI(graph);
     }
 

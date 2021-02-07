@@ -17,7 +17,7 @@ public class TileWorld {
     private Rectangle invispowerUp;
     private Rectangle slowpowerUp;
     private Rectangle speedpowerUp;
-    private Rectangle reduceDamage;
+    private Rectangle shieldpowerUp;
     private Rectangle infirmary;
     private Rectangle brig;
     private Rectangle crew;
@@ -110,7 +110,7 @@ public class TileWorld {
             Rectangle rect = magnifyRectange(((RectangleMapObject) object).getRectangle());
             rect.width = 25;
             rect.height = 25;
-            reduceDamage = rect;
+            shieldpowerUp = rect;
         }
     }
 
@@ -161,8 +161,8 @@ public class TileWorld {
         return invispowerUp;
     }
 
-    public Rectangle getReduceDamage() {
-        return reduceDamage;
+    public Rectangle getShieldpowerUp() {
+        return shieldpowerUp;
     }
 
     public Rectangle getSlowpowerUp() {

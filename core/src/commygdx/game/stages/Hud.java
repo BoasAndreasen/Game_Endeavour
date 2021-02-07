@@ -19,6 +19,9 @@ public class Hud {
     public Stage stage;
     private int systemsUp;
     private int auberHealth;
+    // auber shield power-up
+    private boolean shieldPower;
+    private String powerUpLabelText;
     private final Label systemLabel;
     private final Label auberLabel;
     public int infiltratorsRemaining;
@@ -28,7 +31,8 @@ public class Hud {
     public final Label powerUpLabel;
 
     //used for buttons,text, etc
-    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth) {
+    public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth, boolean shieldPower,
+               String powerUpLabelText) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
 
@@ -36,7 +40,8 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        systemsUp = systems.size();
+        this.powerUpLabelText = powerUpLabelText;
+        this.systemsUp = systems.size();
 
         int localIsArrested = 0;
         for (Infiltrator enemy : enemies) {
@@ -46,6 +51,7 @@ public class Hud {
         }
         infiltratorsRemaining = localIsArrested;
         this.auberHealth = auberHealth;
+        this.shieldPower = shieldPower;
 
         //System.out.format("%d / 15 systems", systemsUp);
         BitmapFont font = new BitmapFont();
@@ -60,7 +66,7 @@ public class Hud {
         Label auberTextLabel = new Label("auber health", new Label.LabelStyle(font, Color.WHITE));
 
         //powerup Label
-        powerUpLabel = new Label("None", new Label.LabelStyle(font, Color.WHITE));
+        powerUpLabel = new Label(powerUpLabelText, new Label.LabelStyle(font, Color.WHITE));
         Label powerUpTextLabel = new Label("Current powerup", new Label.LabelStyle(font, Color.WHITE));
 
         //remaining infiltrators
@@ -112,11 +118,9 @@ public class Hud {
     /**
      * Updates the HUD to decrease the health of auber
      */
-    public void auberDamaged(boolean power) {
-        if (!power) {
+    public void auberDamaged() {
+        if (!shieldPower) {
             auberHealth -= 1;
-        } else {
-            auberHealth -= 0.8;
         }
 
         auberLabel.setText(String.format("%d / 100", auberHealth));
@@ -192,5 +196,21 @@ public class Hud {
 
     public int getAuberHealth() {
         return auberHealth;
+    }
+
+    public void setShieldPower(boolean shieldPower) {
+        this.shieldPower = shieldPower;
+    }
+
+    public boolean getshieldPower() {
+        return shieldPower;
+    }
+
+    public String getPowerUpLabelText() {
+        return powerUpLabelText;
+    }
+
+    public void setPowerUpLabelText(String powerUpLabelText) {
+        this.powerUpLabelText = powerUpLabelText;
     }
 }
