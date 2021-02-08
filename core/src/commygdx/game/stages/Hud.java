@@ -117,6 +117,7 @@ public class Hud {
     }
 
     /**
+     * NEW FOR ASSESMENT 2: UR_DAMAGE.
      * Updates the HUD to decrease the health of auber
      */
     public void auberDamaged() {

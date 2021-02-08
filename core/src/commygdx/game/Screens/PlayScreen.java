@@ -253,7 +253,8 @@ public class PlayScreen implements Screen {
             hud.stage.draw();
         }
 
-        // pause game
+        // NEW FOR ASSESMENT 2. FR_PAUSE. At any point the player
+        // can pause the game.
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             paused = true;
         }
@@ -264,7 +265,7 @@ public class PlayScreen implements Screen {
             saved = false;
         }
 
-        // quit game
+        // FR_QUIT_GAME. After pausing the player can quit the game
         if (Gdx.input.isKeyPressed(Input.Keys.BACKSPACE) && paused) {
             Gdx.app.exit();
         }
@@ -396,7 +397,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: Draws pause message if game is paused
+     * NEW FOR ASSESMENT 2: FR_PAUSE. Draws pause message if game is paused
      */
     private void drawPause() {
         auberGame.batch.begin();
@@ -409,7 +410,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load Hud from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load Hud from save
      */
     private void loadHudSave() {
         //Read JSON
@@ -432,7 +433,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load duration from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load duration from save
      */
     private void loadDurationSave() {
         //Read JSON
@@ -451,7 +452,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load auber from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load auber from save
      */
     private void loadAuberSave() {
         //Read JSON
@@ -475,7 +476,7 @@ public class PlayScreen implements Screen {
 
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load enemy from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load enemy from save
      */
     private void loadEnemySave() {
         ArrayList<Infiltrator> localEnemies = new ArrayList<>();
@@ -510,7 +511,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load npc from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load npc from save
      */
     private void loadNPCSave() {
         ArrayList<NPC> localNPCs = new ArrayList<>();
@@ -538,7 +539,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load system from save
+     * NEW FOR ASSESMENT 2: FR_LOADFILE. Load system from save
      */
     private void loadSystemSave() {
         ArrayList<ShipSystem> localSystems = new ArrayList<>();

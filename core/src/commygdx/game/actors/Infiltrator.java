@@ -66,10 +66,13 @@ public class Infiltrator extends Character {
         if (power == 1) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
         } else if (power == 2 && !room.equals("infirmary")) {
+            //FR_HALLUCINATIONS. Can hallucinate if not in infirmary
             screen.setHallucinate(true);
         } else if (power == 3) {
+            //New for assesment 2: FR_SHAPESHIFTING. Updated shapeshift image to civilian.
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/npcSprite.png")));
         } else if (power == 4) {
+            // FR_SPEED_BOOST. The infiltrators can move at an increased speed.
             movementSystem.setSpeed(20f);
         }
         powerDuration += 1;
