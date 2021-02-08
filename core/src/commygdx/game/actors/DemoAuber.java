@@ -59,11 +59,12 @@ public class DemoAuber extends Auber {
         }
     }
 
+    /**Arrests the infiltrator if in range and puts it in jail
+     * @param infiltrators this list of infiltrators that are being checked
+     * @hud the hud overlay
+     * */
     @Override
     public void arrest(ArrayList<Infiltrator> infiltrators, Hud hud) {
-        /*Arrests the infiltrator if in range and puts it in jail
-         * @param infiltrators this list of infiltrators that are being checked
-         * @hud the hud overlay*/
         for (Infiltrator infiltrator : infiltrators) {
             if (Math.abs(infiltrator.getX() - this.getX()) < 200 && Math.abs(infiltrator.getY() - this.getY()) < 200) {
                 infiltrator.arrest(new Vector2((float) Math.random() * 1000 + 1200, (float) Math.random() * 400 + 5400));

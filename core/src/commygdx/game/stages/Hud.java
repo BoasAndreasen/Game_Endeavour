@@ -30,7 +30,8 @@ public class Hud {
     public final Label attackLabel;
     public final Label powerUpLabel;
 
-    //used for buttons,text, etc
+    //used for buttons,text,etc
+    // constructor extended for assesment 2 to make it easier to initialize from save
     public Hud(ArrayList<Infiltrator> enemies, ArrayList<ShipSystem> systems, int auberHealth, boolean shieldPower,
                String powerUpLabelText) {
         Viewport viewport = new FitViewport(AuberGame.V_WIDTH, AuberGame.V_HEIGHT, new OrthographicCamera());
@@ -134,6 +135,7 @@ public class Hud {
         auberLabel.setText(String.format("%d / 100", auberHealth));
     }
 
+    // power-up in engine-room
     public void healthPower() {
         if (this.auberHealth <= 80) {
             this.auberHealth += 20;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import commygdx.game.AI.DemoAI;
 import commygdx.game.AI.graph.PathGraph;
 
+// New for Assesment 2: UR_CITIZENS. Added previously unimplemented non-hostiles
 public class NPC extends Character {
     private final DemoAI ai;
     private boolean facingRight;
@@ -13,6 +14,7 @@ public class NPC extends Character {
     public NPC(Vector2 position, PathGraph graph) {
         super(position);
         this.setPosition(position.x, position.y);
+        // uses ai from demo mode
         this.ai = new DemoAI(graph);
         this.facingRight = true;
     }
@@ -56,7 +58,5 @@ public class NPC extends Character {
             position = this.movementSystem.down();
             this.setPosition(position.x, position.y);
         }
-
     }
-
 }

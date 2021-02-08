@@ -60,20 +60,19 @@ public class PlayScreen implements Screen {
     public int duration;
     // If specified in IntroScreen then load save
     private final boolean loadFromSave;
+    //Used for the infiltrator's hallucinate power
+    private boolean hallucinate;
 
     //Scene2D
     protected Auber player;
     private Stage shipStage;
-
-    //Used for the infiltrator's hallucinate power
-    private boolean hallucinate;
     private final Texture pauseTexture;
     private final Texture pauseTexture2;
     private final Texture hallucinateTexture;
-
     private final TileWorld tiles;
     protected int scale;
 
+    // CHANGED FOR ASSESMENT 2: UR_SAVEGAME. Constructor extended for better saveability.
     public PlayScreen(AuberGame auberGame, boolean demo, boolean loadFromSave, String difficulty) {
         this.auberGame = auberGame;
         this.demo = demo;
@@ -229,7 +228,7 @@ public class PlayScreen implements Screen {
             //updates game
             checkGameState();
             update(delta);
-            updateInfiltrators(delta);
+            updateInfiltrators();
             teleportCheck();
             powerupCheck();
             player.checkCollision(tiles.getCollisionBoxes());
@@ -293,7 +292,8 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * sets enemy's speed depending on difficulty
+     * NEW FOR ASSESMENT 2: UR_DIFFICULTIES. Sets Auber and infiltrator's
+     * speeds depending on difficulty making infiltrators easier to catch.
      */
     public void diffCheck() {
         if (difficulty.equals("easy")) {
@@ -325,6 +325,7 @@ public class PlayScreen implements Screen {
         if (player.teleportCheck(tiles) && auberGame.onTeleport.equals("false")) {
             auberGame.setScreen(new TeleportMenu(auberGame));
         }
+        // teleports auber to new room
         if ((!auberGame.onTeleport.equals("true")) && (!auberGame.onTeleport.equals("false"))) {
             teleportAuber();
             auberGame.onTeleport = "false";
@@ -332,12 +333,13 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Sets power-up back or calls default
+     * NEW FOR ASSESMENT 2: UR_POWERUPS. Sets power-up or calls default
      */
     public void powerupCheck() {
         if (demo) {
             return;
         }
+        // If duration has not worn out then add powerup
         if (duration > 0) {
             if (player.powerUpCheck(tiles).equals("Health")) {
                 hud.healthPower();
@@ -369,6 +371,7 @@ public class PlayScreen implements Screen {
                 player.damageAuber(enemies, hud);
             }
         } else {
+            // reset
             hud.setPowerUpLabelText("None");
             hud.powerUpLabel.setText("None");
             player.setInvisible(false);
@@ -393,7 +396,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Draws pause message if game is paused
+     * NEW FOR ASSESMENT 2: Draws pause message if game is paused
      */
     private void drawPause() {
         auberGame.batch.begin();
@@ -406,7 +409,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Load Hud from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load Hud from save
      */
     private void loadHudSave() {
         //Read JSON
@@ -429,7 +432,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Load duration from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load duration from save
      */
     private void loadDurationSave() {
         //Read JSON
@@ -448,13 +451,12 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Load auber from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load auber from save
      */
     private void loadAuberSave() {
         //Read JSON
         JSONParser jsonP = new JSONParser();
         try (FileReader reader = new FileReader("saveSprite.json")) {
-            //Read JSON File
             Object obj = jsonP.parse(reader);
             JSONArray sprList1 = (JSONArray) obj;
             JSONObject empObj = (JSONObject) sprList1.get(0);
@@ -464,14 +466,16 @@ public class PlayScreen implements Screen {
             double y = (double) j.get("y");
             boolean invisible = (boolean) j.get("invisible");
             double speed = (double) j.get("speed");
+            // initialize new player with saved variables
             player = new Auber(new Vector2((float) x, (float) y), invisible, (float) speed);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
     }
 
+
     /**
-     * Load enemy from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load enemy from save
      */
     private void loadEnemySave() {
         ArrayList<Infiltrator> localEnemies = new ArrayList<>();
@@ -506,7 +510,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Load npc from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load npc from save
      */
     private void loadNPCSave() {
         ArrayList<NPC> localNPCs = new ArrayList<>();
@@ -534,7 +538,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Load system from save
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. Load system from save
      */
     private void loadSystemSave() {
         ArrayList<ShipSystem> localSystems = new ArrayList<>();
@@ -564,14 +568,15 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Saves game in pause screen
+     * NEW FOR ASSESMENT 2: UR_SAVEGAME. While in pause screen, save game including
+     * all relevant variables from auber, npcs, infiltrators and systems into json files.
      */
     private void saveGame() {
         // write sprite JSON
         int counter = 0;
         JSONArray sprList = new JSONArray();
 
-        //Auber
+        //Auber object
         JSONObject spr = new JSONObject();
         spr.put("x", player.getX());
         spr.put("y", player.getY());
@@ -657,7 +662,7 @@ public class PlayScreen implements Screen {
     }
 
     /**
-     * Heals auber back to full health if auber is in the infirmary
+     * NEW FOR ASSESMENT 2: UR_HEAL. Heals auber back to full health if auber is in the infirmary
      */
     public void healAuber() {
         if (player.sprite.getBoundingRectangle().overlaps(tiles.getInfirmary())) {
@@ -742,11 +747,11 @@ public class PlayScreen implements Screen {
         }
     }
 
-    public void updateInfiltrators(float dt) {
+    public void updateInfiltrators() {
         for (Infiltrator enemy : enemies) {
             enemy.updateTimers();
 
-            //the infiltrator will use their power if the auber is close enough and it's off cooldown
+            //the infiltrator will try to use their power if it's off cooldown
             if (enemy.getPowerCooldown() > 500 && !enemy.getIsArrested()) {
                 enemy.usePower(this, tiles.getRoom(player.getX(), player.getY()));
             }
@@ -808,7 +813,6 @@ public class PlayScreen implements Screen {
         renderer.dispose();
         shipStage.dispose();
         auberGame.batch.dispose();
-
     }
 }
 

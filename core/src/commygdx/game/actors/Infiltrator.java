@@ -19,6 +19,8 @@ public class Infiltrator extends Character {
     private float destructionTimer = 0;
     private boolean facingRight;
 
+    // constructor is extended for asssesment 2 to make it easier to initialize
+    // after loading from save
     public Infiltrator(Vector2 position, int power, PathGraph graph, boolean isArrested,
                        float powerCooldown, float powerDuration, float speed) {
         super(position);
@@ -54,22 +56,29 @@ public class Infiltrator extends Character {
         }
     }
 
+    /**
+     * NEW FOR ASSESMENT 2: UR_SPECIAL_ABILIEIES. Improved powerup and powerDuration consistency and saveability
+     *
+     * @param screen Playscreen
+     * @param room Room
+     */
     public void usePower(PlayScreen screen, String room) {
         if (power == 1) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
-        }
-        else if (power == 2 && !room.equals("infirmary")) {
+        } else if (power == 2 && !room.equals("infirmary")) {
             screen.setHallucinate(true);
-        }
-        else if (power == 3) {
+        } else if (power == 3) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/npcSprite.png")));
-        }
-        else if (power == 4) {
+        } else if (power == 4) {
             movementSystem.setSpeed(20f);
         }
         powerDuration += 1;
     }
 
+    /**
+     * NEW FOR ASSESMENT 2: UR_SPECIAL_ABILITIES. Improved powerup and powerDuration consistency and saveability
+     * Resets enemy to normal after duration is done.
+     */
     public void resetPower() {
         sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorSprite.png")));
         powerCooldown = 0;

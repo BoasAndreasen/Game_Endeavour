@@ -28,6 +28,7 @@ public class TileWorld {
 
     /**
      * Creates all objects that the sprites can interactive with
+     * NEW FOR ASSESMENT 2: UR_POWERUPS. Changed to map to include powerup objects.
      *
      * @param screen the main game screen
      */
@@ -37,6 +38,7 @@ public class TileWorld {
 
         createRooms(map);
 
+        // New for assesment 2. Load systems and their state from previous game
         if (!newShipSystems.isEmpty()) {
             // read from save
             this.shipSystems = newShipSystems;

@@ -14,6 +14,8 @@ public class Auber extends Character {
     protected boolean facingRight;
     private boolean invisible;
 
+    // constructor is extended for asssesment 2 to make it easier to initialize
+    // after loading from save
     public Auber(Vector2 position, boolean invisible, float speed) {
         super(position);
         shuffle();
@@ -70,7 +72,6 @@ public class Auber extends Character {
         //check if standing on teleporter
         for (Rectangle rect : tiles.getTeleporters().values()) {
             if (sprite.getBoundingRectangle().contains(rect)) {
-
                 return true;
             }
         }
@@ -124,6 +125,7 @@ public class Auber extends Character {
     }
 
     /**
+     * NEW FOR ASSESMENT 2: UR_HEAL
      * Damage auber if infiltrators are in range
      *
      * @param infiltrators A list of all infiltrators in the game
@@ -140,18 +142,24 @@ public class Auber extends Character {
         }
     }
 
+    /**
+     * moves the camera to the auber when game starts
+     */
+    public void shuffle() {
+        Vector2 position = movementSystem.left();
+        setPosition(position.x, position.y);
+    }
+
+    /**
+     * NEW FOR ASSESMENT 2: UR_POWERUPS
+     * Changes auber's texture to invisible
+     */
     public void checkInvisibleTexture() {
         if (invisible) {
             sprite.setTexture(new Texture(Gdx.files.internal("Characters/infiltratorInvisibleSprite.png")));
         } else {
             sprite.setTexture(getTexture());
         }
-    }
-
-    //moves the camera to the auber when game starts
-    public void shuffle() {
-        Vector2 position = movementSystem.left();
-        setPosition(position.x, position.y);
     }
 
     public boolean getInvisible() {

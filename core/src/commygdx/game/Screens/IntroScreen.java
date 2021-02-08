@@ -24,6 +24,11 @@ public class IntroScreen implements Screen {
 
     }
 
+    /**
+     * CHANGED FOR ASSESMENT 2: UR_SAVEGAME. Allow player to choose between demo or non-demo and
+     * starting a new game or loading from a save.
+     * @param delta Game delta time
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(21 / 255f, 25 / 255f, 38 / 255f, 0);

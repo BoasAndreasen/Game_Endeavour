@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import commygdx.game.AuberGame;
 
-
+//NEW FOR ASSESMENT 2: UR_DIFFICULTIES. Allows for 3 different difficulties (speeds) of the game
 public class DifficultyScreen implements Screen {
 
     private final Texture difftexture;

@@ -97,7 +97,7 @@ public class PathGraph {
      *
      * @param start The node the path starts at
      * @param goal  The node the path ends at
-     * @return The first node in a bath between the start and goal
+     * @return The first node in a path between the start and goal
      */
     public PathNode findPath(PathNode start, PathNode goal) {
         //Maximum amount of iterations before the search ends as a failure

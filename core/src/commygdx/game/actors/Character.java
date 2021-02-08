@@ -16,7 +16,6 @@ public abstract class Character extends Actor {
 
 
     public Character(Vector2 position) {
-
         sprite = new Sprite(getTexture());
         sprite.setSize(150, 170);
         movementSystem = new MovementSystem(position, 8);
@@ -49,13 +48,14 @@ public abstract class Character extends Actor {
     }
 
     /**
-     * Checks if the character is colliding with any of the collision boxes
+     * NEW FOR ASSESMENT 2: Previously Auber would get stuck in and could walk through wall.
+     * Checks if the character would be colliding with any of the collision boxes
+     * Each variable is true if the character would be colliding with boxes from that direction, false otherwise
      *
      * @param collisionBoxes The collision boxes the character could be colliding with
-     * @return True if the character is colliding with one or more of the boxes, false otherwise
      */
     public void checkCollision(List<Rectangle> collisionBoxes) {
-        boolean one = false, two = false, three = false, four = false;
+        boolean left = false, right = false, up = false, down = false;
         for (Rectangle collisionBox : collisionBoxes) {
             // Coming from left
             Rectangle rectangle = new Rectangle();
@@ -66,7 +66,7 @@ public abstract class Character extends Actor {
 
             if (rectangle.overlaps(collisionBox)) {
                 movementSystem.setLeftCollided(true);
-                one = true;
+                left = true;
             }
 
             // coming from right
@@ -75,7 +75,7 @@ public abstract class Character extends Actor {
 
             if (rectangle.overlaps(collisionBox)) {
                 movementSystem.setRightCollided(true);
-                two = true;
+                right = true;
             }
             // Coming from up
             rectangle.x = sprite.getBoundingRectangle().x;
@@ -83,7 +83,7 @@ public abstract class Character extends Actor {
 
             if (rectangle.overlaps(collisionBox)) {
                 movementSystem.setUpCollided(true);
-                three = true;
+                up = true;
             }
 
             // Coming from down
@@ -92,11 +92,12 @@ public abstract class Character extends Actor {
 
             if (rectangle.overlaps(collisionBox)) {
                 movementSystem.setDownCollided(true);
-                four = true;
+                down = true;
             }
         }
 
-        if (!one && !two && !three && !four) {
+        // if no possible collision is close then set all movements to available
+        if (!left && !right && !up && !down) {
             movementSystem.setDownCollided(false);
             movementSystem.setUpCollided(false);
             movementSystem.setLeftCollided(false);
